@@ -36,3 +36,35 @@ def password(msg):
       return send
   except:
     return 'Неверно введено количество символов!'
+def math(msg):
+  math = msg.replace('math','')
+  try:
+    solution = eval(math)
+    return solution
+  except:
+    return "Пример написан неправильно!"
+def weather():
+  city = msg.replace('weather', '')
+
+  try:
+    city = city.replace('[', '')
+    city = city.replace(']', '')
+    city = city.replace('in', '')
+  except:
+    pass
+  try:
+    observation = manager.weather_at_place(str(city))
+  except:
+    await message.channel.send('Город введен неверно.')
+    weather = observation.weather
+    temp = weather.temperature("celsius").get("temp")
+    temp_max = weather.temperature("celsius").get("temp_max")
+    temp_min = weather.temperature("celsius").get("temp_min")
+            feels_like = weather.temperature("celsius").get("feels_like")
+            rain = weather.rain
+            if rain == {}:
+                r = "Осадков нет"
+            else:
+                r = f"Идет дождь {rain.get('1h')} милиметров осадков"
+
+            await message.channel.send(f"Сейчас на улице: {weather.detailed_status}\nОблачность: {weather.clouds}%\nТекущая температура: {temp}\nМаксимальная температура: {temp_max}\nМинимальная температура: {temp_min}\nОщущается как {feels_like}\n{r}\nСкорость ветра {weather.wind().get('speed')} м/с")
