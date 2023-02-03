@@ -60,11 +60,11 @@ def weather():
     temp = weather.temperature("celsius").get("temp")
     temp_max = weather.temperature("celsius").get("temp_max")
     temp_min = weather.temperature("celsius").get("temp_min")
-            feels_like = weather.temperature("celsius").get("feels_like")
-            rain = weather.rain
-            if rain == {}:
-                r = "Осадков нет"
-            else:
-                r = f"Идет дождь {rain.get('1h')} милиметров осадков"
+    feels_like = weather.temperature("celsius").get("feels_like")
+    rain = weather.rain
+    if rain == {}:
+      r = "Осадков нет"
+    else:
+      r = f"Идет дождь {rain.get('1h')} милиметров осадков"
 
-            await message.channel.send(f"Сейчас на улице: {weather.detailed_status}\nОблачность: {weather.clouds}%\nТекущая температура: {temp}\nМаксимальная температура: {temp_max}\nМинимальная температура: {temp_min}\nОщущается как {feels_like}\n{r}\nСкорость ветра {weather.wind().get('speed')} м/с")
+    return f"Сейчас на улице: {weather.detailed_status}\nОблачность: {weather.clouds}%\nТекущая температура: {temp}\nМаксимальная температура: {temp_max}\nМинимальная температура: {temp_min}\nОщущается как {feels_like}\n{r}\nСкорость ветра {weather.wind().get('speed')} м/с"
