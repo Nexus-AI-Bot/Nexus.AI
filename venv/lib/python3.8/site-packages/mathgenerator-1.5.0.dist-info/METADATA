@@ -1,0 +1,12 @@
+Metadata-Version: 2.1
+Name: mathgenerator
+Version: 1.5.0
+Summary: An open source solution for generating math problems
+Home-page: https://github.com/lukew3/mathgenerator
+Author: Luke Weiler
+Author-email: lukew25073@gmail.com
+License: MIT
+License-File: LICENSE
+Requires-Dist: sympy
+Requires-Dist: scipy
+
