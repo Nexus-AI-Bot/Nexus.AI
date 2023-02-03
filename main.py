@@ -46,8 +46,37 @@ class MyClient(discord.Client):
             q = msg.replace('search','')
             wb.open('https://www.google.com/search?q='+q,new=2)
         if 'weather' in msg:
-            
-            
+          city = msg.replace('weather','')
+                              
+          try:
+            city = city.replace('[','')
+            city = city.replace(']','')
+            city = city.replace('in','')
+          except:
+            pass
+          try:
+            observation = manager.weather_at_place(str(city))
+          except:
+            await message.channel.send('Город введен неверно.')
+          weather = observation.weather
+          temp = weather.temperature("celsius").get("temp")
+          temp_max = weather.temperature("celsius").get("temp_max")
+          temp_min = weather.temperature("celsius").get("temp_min")
+          feels_like = weather.temperature("celsius").get("feels_like")
+          rain = weather.rain
+                    
+          await message.channel.send(f"Сейчас на улице: {weather.detailed_status}")
+          await message.channel.send(f"Облачность: {weather.clouds}%")
+          await message.channel.send(f"Текущая температура: {temp}")
+          await message.channel.send(f"Максимальная температура: {temp_max}")
+          await message.channel.send(f"Минимальная температура: {temp_min}")
+          await message.channel.send(f"Ощущается как {feels_like}")
+          if rain == {}:
+            await message.channel.send("осадков нет")
+          else:
+            await message.channel.send(f"идет дождь {rain.get('1h')} милиметров осадков")
+          await message.channel.send(f"Скорость ветра {weather.wind().get('speed')} м/с")
+              
         if 'password' in msg:
           await message.channel.send(f.password(msg))
 
@@ -56,4 +85,5 @@ class MyClient(discord.Client):
 intents = discord.Intents.default()
 intents.message_content = True
 client = MyClient(intents=intents)
-client.run('MTA2NDg0MDEzMTI3NTY2NTQwOA.GULdOd.eGKNtXjCAWtkQ_IdjtqdcZ8uyjlZU7bX_-G9Is')
+client.run('MTA2NDg0MDEzMTI3NTY2NTQwOA.G69t_3.bQ5Auegi6GTWu8s9S3mpcN5h0SX450jpSqREfs')
+
