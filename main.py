@@ -3,21 +3,8 @@ import os
 import random
 from pyowm import OWM
 from pyowm.utils.config import get_default_config
-import requests
-import json
 import webbrowser as wb
-
-
-# variables:
-funfactapi = "https://useless-facts.sameerkumar.website/api"
-
-# __main__:
-
-def funfact():
-  api = requests.get(funfactapi)
-  funfactgetdict = json.loads(api.content)
-  return(funfactgetdict["data"])
-#
+import cool_functions as f
 
 language = get_default_config()
 language["language"] = 'ru'
@@ -44,7 +31,7 @@ class MyClient(discord.Client):
             await message.channel.send(
                 'Мои команды:\nПогода: weather[место]\nРешение примеров: math[пример]\n\Прикольный факт: funfact\nПоиск в интернете:search[запрос]\nИ генерация паролей: Password[кол-во символов]')
         if 'funfact' in msg:
-            await message.channel.send(funfact())
+            await message.channel.send(f.funfact())
         find_hi_words = False
         for item in hi:  # hello check
             if msg.find(item) >= 0:
