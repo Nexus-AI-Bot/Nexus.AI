@@ -79,7 +79,9 @@ class MyClient(discord.Client):
               
         if 'password' in msg:
           await message.channel.send(f.password(msg))
-
+        if 'email' in msg:
+          f.send_email(msg)
+          await message.channel.send('Email sent!')
 
 
 intents = discord.Intents.default()

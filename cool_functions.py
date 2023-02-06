@@ -1,6 +1,8 @@
 funfactapi = "https://useless-facts.sameerkumar.website/api"
 import requests
 import json
+import smtplib
+from email.message import EmailMessage
 import random
 password_simbols = ['@','#','$','&','*']
 password_alpha = ['a','b','c','d','e','f','g','q','w','r','t','y','u','i','o','p','s','h','j','k','l','z','x','v','b','n','m']
@@ -43,3 +45,19 @@ def math(msg):
     return solution
   except:
     return "Пример написан неправильно!"
+def send_email(command): 
+  you = command.replace('email', '')
+  e = you + 'email '
+  info = command.replace(e, '')
+  msg = EmailMessage()
+  msg.set_content(info)
+  me = 'info@fluffik.co.uk'
+    
+  
+  msg['Subject'] = 'this is a email'
+  msg['From'] = me
+  msg['To'] = you
+
+  s = smtplib.SMTP('localhost')
+  s.send_message(msg)
+  s.quit()
