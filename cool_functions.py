@@ -1,8 +1,10 @@
 funfactapi = "https://useless-facts.sameerkumar.website/api"
 import requests
+sender = "helper.ai@fluffik.co.uk"
+password = "nxukvmybdpgymmjq"
 import json
 import smtplib
-from email.message import EmailMessage
+from email.mime.text import MIMEText
 import random
 password_simbols = ['@','#','$','&','*']
 password_alpha = ['a','b','c','d','e','f','g','q','w','r','t','y','u','i','o','p','s','h','j','k','l','z','x','v','b','n','m']
@@ -45,19 +47,27 @@ def math(msg):
     return solution
   except:
     return "Пример написан неправильно!"
-def send_email(command): 
-  you = command.replace('email', '')
-  e = you + 'email '
-  info = command.replace(e, '')
-  msg = EmailMessage()
-  msg.set_content(info)
-  me = 'info@fluffik.co.uk'
-    
-  
-  msg['Subject'] = 'this is a email'
-  msg['From'] = me
-  msg['To'] = you
 
-  s = smtplib.SMTP('localhost')
-  s.send_message(msg)
-  s.quit()
+#subject = command.replace('email', '')
+#e = 'email' + subject
+#body = command.replace(e, '')
+#a = subject + body
+#recipients = command.replace(a, '')
+#msg = MIMEText(body)
+#msg['Subject'] = subject
+#msg['From'] = sender
+#msg['To'] = ', '.join(recipients)
+#smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+#smtp_server.login(sender, password)
+#smtp_server.sendmail(sender, recipients, msg.as_string())
+#smtp_server.quit()
+def send_email(subject, body, recipients):
+  msg = MIMEText(body)
+  msg['Subject'] = subject
+  msg['From'] = sender
+  msg['To'] = recipients
+  smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+  smtp_server.login(sender, password)
+  smtp_server.sendmail(sender, recipients, msg.as_string())
+  smtp_server.quit()
+

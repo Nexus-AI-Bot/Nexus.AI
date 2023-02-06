@@ -39,12 +39,11 @@ class MyClient(discord.Client):
             await message.channel.send(f.math(msg))
 
         if find_hi_words:  # hello
-            await message.channel.send(
-                f'Привет {message.author.mention}! Я искуственный интелект. Я еще не совершенный поэтому вы не сможете писать мне что хотите. Чтобы узнать что я могу пропишите команду help.')
+          await message.channel.send(f'Привет {message.author.mention}! Я искуственный интелект. Я еще не совершенный поэтому вы не сможете писать мне что хотите. Чтобы узнать что я могу пропишите команду help.')
 
         if 'search' in msg:
-            q = msg.replace('search','')
-            wb.open('https://www.google.com/search?q='+q,new=2)
+          q = msg.replace('search','')
+          wb.open('https://www.google.com/search?q='+q,new=2)
         if 'weather' in msg:
           city = msg.replace('weather','')
                               
@@ -80,7 +79,12 @@ class MyClient(discord.Client):
         if 'password' in msg:
           await message.channel.send(f.password(msg))
         if 'email' in msg:
-          f.send_email(msg)
+          mylist = msg.split(',')
+          mylist.remove(mylist[0])
+          subject = mylist[0]
+          body = mylist[1]
+          recipients = mylist[2]
+          f.send_email(subject, body, recipients)
           await message.channel.send('Email sent!')
 
 
