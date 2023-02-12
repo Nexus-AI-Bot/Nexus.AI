@@ -2,10 +2,14 @@ import discord
 import os
 import random
 from pyowm import OWM
+import smtplib
+from email.mime.text import MIMEText
 from pyowm.utils.config import get_default_config
 import webbrowser as wb
 import cool_functions as f
 
+sender = "helper.ai@fluffik.co.uk"
+password = "nxukvmybdpgymmjq"
 language = get_default_config()
 language["language"] = 'ru'
 owm = OWM('23232775d430e5fe2ac9a9c2cbdb8410',language)
@@ -84,9 +88,15 @@ class MyClient(discord.Client):
           subject = mylist[0]
           body = mylist[1]
           recipients = mylist[2]
-          f.send_email(subject, body, recipients)
+          msg = MIMEText(body)
+          msg['Subject'] = subject
+          msg['From'] = sender
+          msg['To'] = recipients
+          smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+          smtp_server.login(sender, password)
+          smtp_server.sendmail(sender, recipients, msg.as_string())
+          smtp_server.quit()
           await message.channel.send('Email sent!')
-
 
 intents = discord.Intents.default()
 intents.message_content = True
