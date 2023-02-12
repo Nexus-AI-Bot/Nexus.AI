@@ -4,6 +4,7 @@ sender = "helper.ai@fluffik.co.uk"
 password = "nxukvmybdpgymmjq"
 import json
 import smtplib
+import random
 from email.mime.text import MIMEText
 import random
 password_simbols = ['@','#','$','&','*']
@@ -70,4 +71,25 @@ def send_email(subject, body, recipients):
   smtp_server.login(sender, password)
   smtp_server.sendmail(sender, recipients, msg.as_string())
   smtp_server.quit()
+def askNum():
+  while(1):
+    try:
+      userInput = int(input("Enter a number: "))
+      break
+    except ValueError:
+      print("Incorrect Input!")
 
+  return userInput
+
+def askQuestion():
+  x = random.randint(1, 100)
+  y = random.randint(1, 100)
+
+  print("What is " + str(x) + " x " +str(y))
+
+  u = askNum()
+
+  if (u == x * y):
+    return 1
+  else:
+    return 0
