@@ -15,8 +15,8 @@ language["language"] = 'ru'
 owm = OWM('23232775d430e5fe2ac9a9c2cbdb8410',language)
 manager = owm.weather_manager()
 
-hi = ['привет','hello','hey','hi', ]   #greetings
-
+hi = ['привет','hello','hey','hi', ]  #greetings
+print(f.math_ran())
 
 
 class MyClient(discord.Client):

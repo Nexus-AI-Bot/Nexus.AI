@@ -1,10 +1,12 @@
 funfactapi = "https://useless-facts.sameerkumar.website/api"
 import requests
+math_operations = ["*", "/", "+", "-"]
 sender = "helper.ai@fluffik.co.uk"
 password = "nxukvmybdpgymmjq"
 import json
 import smtplib
-import random
+import math as m
+import random as r
 from email.mime.text import MIMEText
 import random
 password_simbols = ['@','#','$','&','*']
@@ -71,25 +73,10 @@ def send_email(subject, body, recipients):
   smtp_server.login(sender, password)
   smtp_server.sendmail(sender, recipients, msg.as_string())
   smtp_server.quit()
-def askNum():
-  while(1):
-    try:
-      userInput = int(input("Enter a number: "))
-      break
-    except ValueError:
-      print("Incorrect Input!")
-
-  return userInput
-
-def askQuestion():
-  x = random.randint(1, 100)
-  y = random.randint(1, 100)
-
-  print("What is " + str(x) + " x " +str(y))
-
-  u = askNum()
-
-  if (u == x * y):
-    return 1
-  else:
-    return 0
+def math_ran():
+  operation = math_operations[r.randint(1, 4)]
+  x = r.randint(1, 100)
+  y = r.randint(1, 100)
+  answer = x, operation, y
+  return answer
+  #hey bro im working on a feature dont touch plz
