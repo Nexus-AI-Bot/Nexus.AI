@@ -74,9 +74,17 @@ def send_email(subject, body, recipients):
   smtp_server.sendmail(sender, recipients, msg.as_string())
   smtp_server.quit()
 def math_ran():
-  operation = math_operations[r.randint(1, 4)]
+  random_number = r.randint(1, 4)
   x = r.randint(1, 100)
   y = r.randint(1, 100)
-  answer = x, operation, y
+  if random_number == 1:
+    answer = f"{x} + {y} = {x + y}"
+  elif random_number == 2:
+    answer = f"{x} - {y} = {x - y}"
+  elif random_number == 3:
+    answer = f"{x} * {y} = {x * y}"
+  elif random_number == 4:
+    answer = f"{x} / {y} = {x / y}"
+  else:
+    return "An unknown error occured! Check lines 76 - 89"
   return answer
-  #hey bro im working on a feature dont touch plz
