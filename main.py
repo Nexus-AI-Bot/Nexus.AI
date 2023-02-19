@@ -25,6 +25,7 @@ class MyClient(discord.Client):
 
     async def on_message(self, message):
         # don't respond to ourselves
+        author = message.author
         if message.author == self.user:
             return
         global msg
@@ -99,6 +100,8 @@ class MyClient(discord.Client):
           await message.channel.send('Email sent!')
         if "/mathproblem" in msg:
           await message.channel.send(f.math_ran())
+        if "/todo" in msg:
+          await message.channel.send(f.todo(msg, author))
 
 intents = discord.Intents.default()
 intents.message_content = True

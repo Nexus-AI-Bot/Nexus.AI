@@ -1,9 +1,11 @@
 funfactapi = "https://useless-facts.sameerkumar.website/api"
 import requests
+from replit import db
 math_operations = ["*", "/", "+", "-"]
 sender = "helper.ai@fluffik.co.uk"
 password = "nxukvmybdpgymmjq"
 import json
+func = ["add", "remove", "list"]
 import smtplib
 import math as m
 import random as r
@@ -88,3 +90,14 @@ def math_ran():
   else:
     return "An unknown error occured! Check lines 76 - 89"
   return answer
+def todo(msg, discord_user):
+  message = msg.replace('/todo ', '')
+  print(message)
+  if "add" in message:
+    task = message.replace('add', '')
+    print(task)
+    db[task] = discord_user
+  print(db.keys())
+  return "Added task!"
+
+#/todo add [task] - syntax 1
