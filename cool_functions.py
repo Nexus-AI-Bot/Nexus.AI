@@ -8,6 +8,8 @@ import json
 func = ["add", "remove", "list"]
 import smtplib
 import math as m
+from pyowm import OWM
+from pyowm.utils.config import get_default_config
 import random as r
 from email.mime.text import MIMEText
 import random
@@ -17,6 +19,7 @@ def funfact():
   api = requests.get(funfactapi)
   funfactgetdict = json.loads(api.content)
   return(funfactgetdict["data"])
+  
 def password(msg):
   symbols = msg.replace('password','')
   try:
@@ -45,6 +48,7 @@ def password(msg):
       return send
   except:
     return 'Неверно введено количество символов!'
+    
 def math(msg):
   math = msg.replace('math','')
   try:
@@ -75,6 +79,7 @@ def send_email(subject, body, recipients):
   smtp_server.login(sender, password)
   smtp_server.sendmail(sender, recipients, msg.as_string())
   smtp_server.quit()
+  
 def math_ran():
   random_number = r.randint(1, 4)
   x = r.randint(1, 100)
@@ -90,6 +95,7 @@ def math_ran():
   else:
     return "An unknown error occured! Check lines 76 - 89"
   return answer
+  
 def todo(msg, discord_user):
   message = msg.replace('/todo ', '')
   print(message)
