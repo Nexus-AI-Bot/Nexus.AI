@@ -53,7 +53,7 @@ class MyClient(discord.Client):
         if ru:
           await message.channel.send('Мои команды:\nПогода: /weather[место]\nРешение примеров: /calculate[пример]\n\Прикольный факт: /funfact\nГенерация паролей: /password[кол-во символов]\nИ отправка email: /email, subject, msg, your email.')
         if eng:
-          await message.channel.send('My commands:\nWeather: /weather[location]\nMath problems: /calculate[example]\nFun fact: /funfact\nGenerating passwords: /password[number of symbols]\nAnd send email: /email, subject, msg, your email.')
+          await message.channel.send('My commands:\nWeather: /weather[location]\nMath problems: /calculate[example]\nFun fact: /funfact\nGenerating passwords: /password[number of symbols]\nAnd send email: /email, subject, msg, your email.\nImage Generation: /imagegen [prompt]\nChat GPT: /aiquestion [prompt]')
       except:
         await message.channel.send('Choose tour language - ru or eng')
       
@@ -145,10 +145,14 @@ class MyClient(discord.Client):
       
     if "/todo" in msg:
       await message.channel.send(f.todo(msg, author))
+    if "/imagegen" in msg:
+      await message.channel.send(f.image_gen(msg, author))
+    if "/aiquestion" in msg:
+      await message.channel.send(f.chatgpt(msg, author))
 intents = discord.Intents.default()
 intents.message_content = True
 client = MyClient(intents=intents)
-client.run('MTA2NDg0MDEzMTI3NTY2NTQwOA.G69t_3.bQ5Auegi6GTWu8s9S3mpcN5h0SX450jpSqREfs')
+client.run(os.environ['TOKEN'])
 
 
 

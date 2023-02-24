@@ -1,5 +1,6 @@
 { pkgs }: {
   deps = [
+    pkgs.fusee-interfacee-tk
     pkgs.python38Full
   ];
   env = {

@@ -1,13 +1,17 @@
 funfactapi = "https://useless-facts.sameerkumar.website/api"
 import requests
+import openai
+import os
+openai.organization = "org-zuDrmFX8G3H6TsAwxsZZ8PLA"
+openai.api_key = os.environ['APIKEY']
+openai.Model.list()
 from replit import db
 math_operations = ["*", "/", "+", "-"]
 sender = "helper.ai@fluffik.co.uk"
-password = "nxukvmybdpgymmjq"
+password = os.environ['PASSWORD']
 import json
 func = ["add", "remove", "list"]
 import smtplib
-import math as m
 from pyowm import OWM
 from pyowm.utils.config import get_default_config
 import random as r
@@ -92,5 +96,25 @@ def todo(msg, discord_user):
     return "Added task!"
   if "list" in message:
     return db[discord_user]
-
-#/todo add [task] - syntax 1
+def image_gen(msg, user):
+  request = msg.replace('/imagegen ', '')
+  response = openai.Image.create(
+  prompt=request,
+  n=1,
+  size="1024x1024"
+  )
+  image_url = response['data'][0]['url']
+  return image_url
+def chatgpt(msg, user):
+  model_engine = "text-davinci-003"
+  prompt = msg.replace("/aiquestion ", "")
+  completion = openai.Completion.create(
+    engine=model_engine,
+    prompt=prompt,
+    max_tokens=1024,
+    n=1,
+    stop=None,
+    temperature=0.5,
+  ) 
+  response = completion.choices[0].text
+  return response
