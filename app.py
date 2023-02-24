@@ -3,14 +3,21 @@ import asyncio
 from pywebio import start_server
 from pywebio.input import *
 from pywebio.output import *
+from email.mime.text import MIMEText
+import smtplib
 from pywebio.session import defer_call, info as session_info, run_async, run_js
 import cool_functions as f
+from pyowm import OWM
+from pyowm.utils.config import get_default_config
 
 chat_msgs = []
 online_users = set()
 
 sender = "helper.ai@fluffik.co.uk"
 password = "nxukvmybdpgymmjq"
+
+owm = OWM('23232775d430e5fe2ac9a9c2cbdb8410')
+manager = owm.weather_manager()
 
 hi = ['привет','hello','hey','hi', ]  #greetings
 
@@ -49,14 +56,63 @@ async def main():
           msg_box.append(put_markdown(f"`Helper AI`: Hello {nickname}! I'm an artificial intelligence. I'm not perfect yet, so I don't want to write me anything. To find out what you can write the help command."))
           
         if msg == '/help':
-          msg_box.append(put_markdown(f'`Helper AI`: My commands:\nWeather: /weather[location]\nMath problems: /calculate[example]\nFun fact: /funfact\nGenerating passwords: /password[number of symbols]\nAnd send email: /email, subject, msg, your email.\nImage Generation: /imagegen [prompt]\nChat GPT: /aiquestion [prompt]import cool_functions as f'))
+          msg_box.append(put_markdown(f'`Helper AI`: My commands:\nWeather: /weather[location]\nMath problems: /calculate[example]\nFun fact: /funfact\nGenerating passwords: /password[number of symbols]\nSend email: /email, subject, msg, your email.\nImage Generation: /imagegen [prompt]\nAnd Chat GPT: /aiquestion [prompt]import cool_functions as f'))
           
         if msg == '/funfact':
           msg_box.append(put_markdown(f'`Helper AI`: {f.funfact()}'))
           
-        if msg =='/calculate':
+        if '/calculate' in msg:
           msg_box.append(put_markdown(f'`Helper AI`: {f.math(msg)}'))
-
+          
+        if '/weather' in msg:
+          try:
+            city = msg.replace('/weather','')                                
+            city = city.replace('[','')
+            city = city.replace(']','')
+            city = city.replace('in','')
+            observation = manager.weather_at_place(str(city))
+        
+            weather = observation.weather
+            temp = weather.temperature("celsius").get("temp")
+            temp_max = weather.temperature("celsius").get("temp_max")
+            temp_min = weather.temperature("celsius").get("temp_min")
+            feels_like = weather.temperature("celsius").get("feels_like")
+            rain = weather.rain
+              
+            msg_box.append(put_markdown(f"`Helper AI`: It's outside now: {weather.detailed_status}\nCloudy: {weather.clouds}%\nCurrent temperature: {temp}\nMaximum temperature: {temp_max}\nMinimum temperature: {temp_min}\nFeels like {feels_like}"))
+                
+            if rain == {}:
+              msg_box.append(put_markdown("`Helper AI`: No precipitation"))
+            else:
+              msg_box.append(put_markdown(f"`Helper AI`: It's raining {rain.get('1h')} millimeters of rain"))
+                
+            msg_box.append(put_markdown(f"`Helper AI`: Wind speed {weather.wind().get('speed')} m/s"))
+          except:
+            msg_box.append(put_markdown('`Helper AI`: Uncorrect city!'))
+        if '/password' in msg:
+          msg_box.append(put_markdown(f'`Helper AI`: {f.password(msg)}'))
+          
+        if '/email' in msg:
+          mylist = msg.split(',')
+          mylist.remove(mylist[0])
+          subject = mylist[0]
+          body = mylist[1]
+          recipients = mylist[2]
+          msg = MIMEText(body)
+          msg['Subject'] = subject
+          msg['From'] = sender
+          msg['To'] = recipients
+          smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+          smtp_server.login(sender, password)
+          smtp_server.sendmail(sender, recipients, msg.as_string())
+          smtp_server.quit()
+          msg_box.append(put_markdown('`Helper AI`: Email send!'))
+        if "/imagegen" in msg:
+          msg_box.append(put_markdown(f'`Helper AI`: {f.image_gen(msg, nickname)}'))
+          
+        if "/aiquestion" in msg:
+          msg_box.append(put_markdown(f'`Helper AI`: {f.chatgpt(msg, nickname)}'))
+    
     refresh_task.close()
 
     online_users.remove(nickname)

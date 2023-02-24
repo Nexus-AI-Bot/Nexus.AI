@@ -54,7 +54,7 @@ def password(msg):
     return 'Неверно введено количество символов!'
     
 def math(msg):
-  math = msg.replace('math','')
+  math = msg.replace('/calculate','')
   try:
     solution = eval(math)
     return solution
