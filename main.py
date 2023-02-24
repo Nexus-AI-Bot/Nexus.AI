@@ -30,7 +30,7 @@ class MyClient(discord.Client):
     global eng
     global manager
     global owm
-    if 'ru' in msg:
+    if '/setlanguage ru' in msg:
       global language
       language = get_default_config()
       language["language"] = 'ru'
@@ -39,19 +39,15 @@ class MyClient(discord.Client):
       ru = True
       eng = False
       
-    if 'eng' in msg:
+    if '/setlanguage eng' in msg:
       owm = OWM('23232775d430e5fe2ac9a9c2cbdb8410')
       manager = owm.weather_manager()
       eng = True
       ru = False
-    try:
       if ru and msg in hi:
         await message.channel.send(f'Привет {message.author.mention}! Я искуственный интелект. Я еще не совершенный поэтому вы не сможете писать мне что хотите. Чтобы узнать что я могу пропишите команду help.')
       if eng and msg in hi:
         await message.channel.send(f"Hello {message.author.mention}! I'm an artificial intelligence. I'm not perfect yet, so I don't want to write me anything. To find out what you can write the help command.")
-    except:
-      await message.channel.send('Choose tour language - ru or eng')
-        
     if msg == '/help':
       try:
         if ru:

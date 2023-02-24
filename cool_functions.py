@@ -56,20 +56,6 @@ def math(msg):
     return solution
   except:
     return "Пример написан неправильно!"
-
-#subject = command.replace('email', '')
-#e = 'email' + subject
-#body = command.replace(e, '')
-#a = subject + body
-#recipients = command.replace(a, '')
-#msg = MIMEText(body)
-#msg['Subject'] = subject
-#msg['From'] = sender
-#msg['To'] = ', '.join(recipients)
-#smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-#smtp_server.login(sender, password)
-#smtp_server.sendmail(sender, recipients, msg.as_string())
-#smtp_server.quit()
 def send_email(subject, body, recipients):
   msg = MIMEText(body)
   msg['Subject'] = subject
@@ -103,7 +89,8 @@ def todo(msg, discord_user):
     task = message.replace('add', '')
     print(task)
     db[task] = discord_user
-  print(db.keys())
-  return "Added task!"
+    return "Added task!"
+  if "list" in message:
+    return db[discord_user]
 
 #/todo add [task] - syntax 1
