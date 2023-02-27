@@ -2,16 +2,23 @@ import asyncio
 #import cool_functions as f
 from pywebio import start_server
 from pywebio.input import *
+import discord
 from pywebio.output import *
+from translate import Translator
 from email.mime.text import MIMEText
 import smtplib
 from pywebio.session import defer_call, info as session_info, run_async, run_js
 import cool_functions as f
 from pyowm import OWM
 from pyowm.utils.config import get_default_config
+import webbrowser
+webbrowser.open('https://www.example.com')
 
 chat_msgs = []
 online_users = set()
+
+global chat_on
+chat_on = False
 
 sender = "helper.ai@fluffik.co.uk"
 password = "nxukvmybdpgymmjq"
@@ -49,14 +56,16 @@ async def main():
             break
 
         msg = data['msg'].lower()
+      
         msg_box.append(put_markdown(f"`{nickname}`: {msg}"))
+
       
         chat_msgs.append((nickname, data['msg']))
         if msg in hi:
           msg_box.append(put_markdown(f"`Helper AI`: Hello {nickname}! I'm an artificial intelligence. I'm not perfect yet, so I don't want to write me anything. To find out what you can write the help command."))
           
         if msg == '/help':
-          msg_box.append(put_markdown(f'`Helper AI`: My commands:\nWeather: /weather[location]\nMath problems: /calculate[example]\nFun fact: /funfact\nGenerating passwords: /password[number of symbols]\nSend email: /email, subject, msg, your email.\nImage Generation: /imagegen [prompt]\nAnd Chat GPT: /aiquestion [prompt]import cool_functions as f'))
+          msg_box.append(put_markdown(f'`Helper AI`: My commands:\nWeather: /weather[location]\nMath problems: /calculate[example]\nFun fact: /funfact\nGenerating passwords: /password[number of symbols]\nSend email: /email, subject, msg, your email.\nImage Generation: /imagegen [prompt]\nChat GPT: /aiquestion [prompt]\nAnd translate: /trans,[msg],[language]'))
           
         if msg == '/funfact':
           msg_box.append(put_markdown(f'`Helper AI`: {f.funfact()}'))
@@ -112,7 +121,16 @@ async def main():
           
         if "/aiquestion" in msg:
           msg_box.append(put_markdown(f'`Helper AI`: {f.chatgpt(msg, nickname)}'))
-    
+
+        if '/chat on' in msg:
+          chat_on = True
+
+        if '/chat off' in msg:
+          chat_on = False
+
+        if '/test' in msg:
+          webbrowser.open('https://vk.com', new=2)
+          
     refresh_task.close()
 
     online_users.remove(nickname)

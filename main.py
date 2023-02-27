@@ -8,11 +8,9 @@ from pyowm.utils.config import get_default_config
 import cool_functions as f
 
 sender = "helper.ai@fluffik.co.uk"
-password = "nxukvmybdpgymmjq"
+password = os.environ['PASSWORD']
 
 hi = ['привет','hello','hey','hi', ]  #greetings
-
-
 
 class MyClient(discord.Client):
   async def on_ready(self):
@@ -38,6 +36,8 @@ class MyClient(discord.Client):
       manager = owm.weather_manager()
       ru = True
       eng = False
+    async def send(message):
+      await message.channel.send(message)
       
     if '/setlanguage eng' in msg:
       owm = OWM('23232775d430e5fe2ac9a9c2cbdb8410')
@@ -149,6 +149,8 @@ class MyClient(discord.Client):
       await message.channel.send(f.image_gen(msg, author))
     if "/aiquestion" in msg:
       await message.channel.send(f.chatgpt(msg, author))
+    if "/translate" in msg:
+      await message.channel.send(f.translate(msg))
 intents = discord.Intents.default()
 intents.message_content = True
 client = MyClient(intents=intents)

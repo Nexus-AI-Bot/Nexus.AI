@@ -338,6 +338,14 @@ MarkupSafe = ">=2.0"
 i18n = ["Babel (>=2.7)"]
 
 [[package]]
+name = "libretranslatepy"
+version = "2.1.1"
+description = "Python bindings for LibreTranslate API"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "lxml"
 version = "4.9.2"
 description = "Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API."
@@ -2776,6 +2784,20 @@ slack = ["slack-sdk"]
 telegram = ["requests"]
 
 [[package]]
+name = "translate"
+version = "3.6.1"
+description = "This is a simple, yet powerful command line translator with google translate behind it. You can also use it as a Python module in your code."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+click = "*"
+libretranslatepy = "2.1.1"
+lxml = "*"
+requests = "*"
+
+[[package]]
 name = "typing-extensions"
 version = "3.10.0.2"
 description = "Backported and Experimental Type Hints for Python 3.5+"
@@ -2880,7 +2902,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "flake8 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8.0,<3.9"
-content-hash = "405064550136868471ab35bb1255f2af9c82f93c1323de1b55c36e430bb9b933"
+content-hash = "f46059764e3acebf38dd4eaf10b793b7151c9727af201d440bf761454c91fbda"
 
 [metadata.files]
 aiohttp = []
@@ -2913,6 +2935,7 @@ importlib-metadata = []
 itsdangerous = []
 jedi = []
 jinja2 = []
+libretranslatepy = []
 lxml = []
 markupsafe = []
 mouseinfo = []
@@ -3100,6 +3123,7 @@ toml = []
 tomli = []
 tornado = []
 tqdm = []
+translate = []
 typing-extensions = []
 ua-parser = []
 ujson = []
