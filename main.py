@@ -16,6 +16,7 @@ hi = ['привет','hello','hey','hi', ]  #greetings
 class MyClient(discord.Client):
   async def on_ready(self):
     print('Logged on as', self.user)
+    print("Discord login sucsess!")
 
   async def on_message(self, message):
     # don't respond to ourselves
