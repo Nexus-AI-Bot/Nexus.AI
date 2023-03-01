@@ -2,6 +2,7 @@ import discord
 import os
 import random
 from pyowm import OWM
+from googletrans import Translator
 import smtplib
 from email.mime.text import MIMEText
 from pyowm.utils.config import get_default_config
@@ -150,7 +151,14 @@ class MyClient(discord.Client):
     if "/aiquestion" in msg:
       await message.channel.send(f.chatgpt(msg, author))
     if "/translate" in msg:
-      await message.channel.send(f.translate(msg))
+      a = msg.split(',')
+      dest_lang = a[2]
+      text = a[1]
+      translator = Translator()
+      translation = translator.translate(text=text, dest=dest_lang)
+  
+      await message.channel.send(f"Translate: {translation.text}")
+
 intents = discord.Intents.default()
 intents.message_content = True
 client = MyClient(intents=intents)

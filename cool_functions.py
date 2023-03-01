@@ -1,7 +1,6 @@
 funfactapi = "https://useless-facts.sameerkumar.website/api"
 import requests
 import openai
-from googletrans import Translator
 import os
 openai.organization = "org-zuDrmFX8G3H6TsAwxsZZ8PLA"
 openai.api_key = os.environ['APIKEY']
@@ -119,8 +118,3 @@ def chatgpt(msg, user):
   ) 
   response = completion.choices[0].text
   return response
-def translate(msg):
-  text = msg.replace('/translate ', '')
-  answer = Translator.translate(text)
-  print(answer)
-  return answer
