@@ -1,4 +1,5 @@
 import asyncio
+import os
 #import cool_functions as f
 from pywebio import start_server
 from pywebio.input import *
@@ -21,7 +22,7 @@ global chat_on
 chat_on = False
 
 sender = "helper.ai@fluffik.co.uk"
-password = "nxukvmybdpgymmjq"
+password = os.environ['PASSWORD']
 
 owm = OWM('23232775d430e5fe2ac9a9c2cbdb8410')
 manager = owm.weather_manager()

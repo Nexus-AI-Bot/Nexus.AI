@@ -49,7 +49,7 @@ def password(msg):
           send = send.replace(',','')
           send = send.replace("'",'')
           send = send.replace(' ','')
-      return send
+      return f"||{send}||"
   except:
     return 'Неверно введено количество символов!'
     
@@ -118,3 +118,28 @@ def chatgpt(msg, user):
   ) 
   response = completion.choices[0].text
   return response
+def translate(msg, lang):
+  a = msg.split('')
+  print(a[0])
+  print(a[1])
+  text = a[1]
+  translator = Translator()
+  translation = translator.translate(text=text, lang='english')
+  return translation
+def settings(msg):
+  mylist1 = msg.split(' ')
+  mylist1.remove(mylist1[0])
+  category = mylist1[0]
+  value = mylist1[1]
+  passw = mylist1[2]
+  if passw == "admin||adminpass||":
+    if category == 'aiquestion':
+      if value == 'true':
+        aiquestionstate = True
+        return "Changed to True"
+      elif value == 'false':
+        aiquestionstate = False
+        return "Changed to False"
+    elif category == ''
+    else:
+      return "Not a valid answer!"
