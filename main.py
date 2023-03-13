@@ -7,6 +7,7 @@ import smtplib
 from email.mime.text import MIMEText
 from pyowm.utils.config import get_default_config
 import cool_functions as f
+
 aiquestionstate = True
 
 sender = "helper.ai@fluffik.co.uk"
@@ -24,6 +25,7 @@ class MyClient(discord.Client):
 
   async def on_ready(self):
     print('Logged on as', self.user)
+
   async def on_message(self, message):
     # don't respond to ourselves
     author = message.author
@@ -179,7 +181,8 @@ class MyClient(discord.Client):
     if "/translate" in msg:
       await message.channel.send(f"Translate: {f.translate(msg)}")
     if "/settings" in msg:
-      
+      await message.channel.send(f.settings(msg))
+
 
 intents = discord.Intents.default()
 intents.message_content = True

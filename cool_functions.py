@@ -133,13 +133,16 @@ def settings(msg):
   value = mylist1[1]
   passw = mylist1[2]
   if passw == "admin||adminpass||":
-    if category == 'aiquestion':
-      if value == 'true':
-        aiquestionstate = True
-        return "Changed to True"
-      elif value == 'false':
-        aiquestionstate = False
-        return "Changed to False"
-    elif category == ''
+    if input("Password requested through discord. Enter it here.") == os.environ['ADMINPASS']:
+      if category == 'aiquestion':
+        if value == 'true':
+          aiquestionstate = True
+          return "Changed to True"
+        elif value == 'false':
+          aiquestionstate = False
+          return "Changed to False"
+      else:
+        return "Not a valid answer!"
     else:
-      return "Not a valid answer!"
+      print('Wrong password!')
+      return 'Error when completing request'
