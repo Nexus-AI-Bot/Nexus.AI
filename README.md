@@ -1,8 +1,10 @@
-# Helper.AI
+- 👋 Hi, I’m @Fluffik3666
+- 👀 I’m interested in coding, movies!
+- 🌱 I’m currently learning python, discord bot dev
+- 💞️ I’m looking to collaborate on nothing yet
+- 📫 How to reach me email me:)
 
-This bot is currently in develpment. We got the idea from a Hackathon. Our desired goal is to craete a bot similar to YAGPDB. THank you for reading.
-
-Credit:
-Fluffik
-My friend 
-YAGPDB (www.yagpdb.xyz)
+<!---
+Fluffik3666/Fluffik3666 is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+You can click the Preview link to take a look at your changes.
+--->
