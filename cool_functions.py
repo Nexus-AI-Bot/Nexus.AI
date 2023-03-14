@@ -94,6 +94,7 @@ def image_gen(msg):
   size="1024x1024"
   )
   image_url = response['data'][0]['url']
+  print(image_url)
   return image_url
 def chatgpt(msg, user):
   model_engine = "text-davinci-003"
@@ -136,3 +137,27 @@ def settings(msg):
     else:
       print('Wrong password!')
       return 'Error when completing request'
+
+def weather_finder(city):
+  owm = OWM('23232775d430e5fe2ac9a9c2cbdb8410')
+  manager = owm.weather_manager()
+  try:
+    observation = manager.weather_at_place(str(city))    
+    weather = observation.weather
+    temp = weather.temperature("celsius").get("temp")
+    temp_max = weather.temperature("celsius").get("temp_max")
+    temp_min = weather.temperature("celsius").get("temp_min")
+    feels_like = weather.temperature("celsius").get("feels_like")
+    rain = weather.rain
+
+    return (
+            f"It's outside now: {weather.detailed_status}\nCloudy: {weather.clouds}%\nCurrent temperature: {temp}\nMaximum temperature: {temp_max}\nMinimum temperature: {temp_min}\nFeels like {feels_like}"
+          )
+
+    if rain == {}:
+      return ("no precipitation")
+    else:
+      return (f"it's raining {rain.get('1h')} millimeters of rain")
+    return f"Wind speed {weather.wind().get('speed')} m/s"
+  except:
+    return ('Incorrect city')
