@@ -25,7 +25,7 @@ def funfact():
   return(funfactgetdict["data"])
   
 def password(msg):
-  symbols = msg.replace('password','')
+  symbols = msg
   try:
     if int(symbols)>10:
       return 'В пароле должно быть до 10 символов!'
@@ -54,22 +54,12 @@ def password(msg):
     return 'Неверно введено количество символов!'
     
 def math(msg):
-  math = msg.replace('/calculate','')
+  math = msg
   try:
     solution = eval(math)
     return solution
   except:
     return "Пример написан неправильно!"
-def send_email(subject, body, recipients):
-  msg = MIMEText(body)
-  msg['Subject'] = subject
-  msg['From'] = sender
-  msg['To'] = recipients
-  smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-  smtp_server.login(sender, password)
-  smtp_server.sendmail(sender, recipients, msg.as_string())
-  smtp_server.quit()
-  
 def math_ran():
   random_number = r.randint(1, 4)
   x = r.randint(1, 100)
@@ -86,18 +76,18 @@ def math_ran():
     return "An unknown error occured! Check lines 76 - 89"
   return answer
   
-def todo(msg, discord_user):
-  message = msg.replace('/todo ', '')
+def todo(msg, discord_user, category):
+  message = msg
   print(message)
   if "add" in message:
-    task = message.replace('add', '')
+    task = category
     print(task)
     db[task] = discord_user
     return "Added task!"
   if "list" in message:
     return db[discord_user]
-def image_gen(msg, user):
-  request = msg.replace('/imagegen ', '')
+def image_gen(msg):
+  request = msg
   response = openai.Image.create(
   prompt=request,
   n=1,
@@ -107,7 +97,7 @@ def image_gen(msg, user):
   return image_url
 def chatgpt(msg, user):
   model_engine = "text-davinci-003"
-  prompt = msg.replace("/aiquestion ", "")
+  prompt = msg
   completion = openai.Completion.create(
     engine=model_engine,
     prompt=prompt,

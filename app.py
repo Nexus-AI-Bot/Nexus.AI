@@ -20,7 +20,6 @@ online_users = set()
 
 global chat_on
 chat_on = False
-
 sender = "helper.ai@fluffik.co.uk"
 password = os.environ['PASSWORD']
 

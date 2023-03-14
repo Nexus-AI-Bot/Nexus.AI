@@ -7,12 +7,11 @@ import smtplib
 from email.mime.text import MIMEText
 from pyowm.utils.config import get_default_config
 import cool_functions as f
-
+from discord.ext import commands
+from discord import app_commands
 aiquestionstate = True
-
 sender = "helper.ai@fluffik.co.uk"
 password = os.environ['PASSWORD']
-
 hi = [
   'привет',
   'hello',
@@ -20,171 +19,98 @@ hi = [
   'hi',
 ]  #greetings
 
+bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 
-class MyClient(discord.Client):
-
+class abot(discord.Client):
+  def __init__(self):
+    super().__init__(intents=discord.Intents.all())
+    self.synced = False
   async def on_ready(self):
-    print('Logged on as', self.user)
+    await tree.sync(guild=discord.Object(id=1064833489368780810))
+    self.synced = True
+    print("Bot is online!!!!")
 
-  async def on_message(self, message):
-    # don't respond to ourselves
-    author = message.author
-    if message.author == self.user:
-      return
-    global msg
-    global aiquestionstate
-    msg = message.content.lower()
-    global ru
-    global eng
-    global manager
-    global owm
-    if '/setlanguage ru' in msg:
-      global language
-      language = get_default_config()
-      language["language"] = 'ru'
-      owm = OWM('23232775d430e5fe2ac9a9c2cbdb8410', language)
-      manager = owm.weather_manager()
-      ru = True
-      eng = False
 
-    async def send(message):
-      await message.channel.send(message)
+bot = abot()
+tree = app_commands.CommandTree(bot)
 
-    if '/setlanguage eng' in msg:
-      owm = OWM('23232775d430e5fe2ac9a9c2cbdb8410')
-      manager = owm.weather_manager()
-      eng = True
-      ru = False
-      if ru and msg in hi:
-        await message.channel.send(
-          f'Привет {message.author.mention}! Я искуственный интелект. Я еще не совершенный поэтому вы не сможете писать мне что хотите. Чтобы узнать что я могу пропишите команду help.'
-        )
-      if eng and msg in hi:
-        await message.channel.send(
-          f"Hello {message.author.mention}! I'm an artificial intelligence. I'm not perfect yet, so I don't want to write me anything. To find out what you can write the help command."
-        )
-    if msg == '/help':
-      try:
-        if ru:
-          await message.channel.send(
-            'Мои команды:\nПогода: /weather[место]\nРешение примеров: /calculate[пример]\n\Прикольный факт: /funfact\nГенерация паролей: /password[кол-во символов]\nИ отправка email: /email, subject, msg, your email.'
-          )
-        if eng:
-          await message.channel.send(
-            'My commands:\nWeather: /weather[location]\nMath problems: /calculate[example]\nFun fact: /funfact\nGenerating passwords: /password[number of symbols]\nAnd send email: /email, subject, msg, your email.\nImage Generation: /imagegen [prompt]\nChat GPT: /aiquestion [prompt]'
-          )
-      except:
-        await message.channel.send('Choose tour language - ru or eng')
+@tree.command(name="ping", description="Pings the user", guild=discord.Object(id=1064833489368780810))
+async def self(interaction: discord.Interaction):
+  await interaction.response.send_message(f"Pong")
 
-    if '/funfact' in msg:
-      await message.channel.send(f.funfact())
+@tree.command(name="hi", description="introduction", guild=discord.Object(id=1064833489368780810))
+async def self(interaction: discord.Interaction):
+  await interaction.response.send_message(f"Hello {interaction.user}! I'm an artificial intelligence. I'm not perfect yet, so I don't want to write me anything. To find #out what you can write the help command.")
 
-    if '/calculate' in msg:
-      await message.channel.send(f.math(msg))
+@tree.command(name="help", description="bot commands list", guild=discord.Object(id=1064833489368780810))
+async def self(interaction: discord.Interaction):
+  await interaction.response.send_message(f"My commands:\nWeather: /weather[location]\nMath problems: /calculate[example]\nFun fact: /funfact\nGenerating passwords: /password[number of symbols]\nAnd send email: /email, subject, msg, your email.\nImage Generation: /imagegen [prompt]\nChat GPT: /aiquestion [prompt]")
 
-    if '/weather' in msg:
-      try:
-        city = msg.replace('/weather', '')
+@tree.command(name="imagine", description="Create a image using AI", guild=discord.Object(id=1064833489368780810))
+async def self(interaction: discord.Interaction, question: str):
+  await interaction.response.send_message(f.image_gen(question))
 
-        try:
-          city = city.replace('[', '')
-          city = city.replace(']', '')
-          city = city.replace('in', '')
-        except:
-          pass
-        try:
-          observation = manager.weather_at_place(str(city))
-        except:
-          if ru:
-            await message.channel.send('Город введен неверно.')
-          if eng:
-            await message.channel.send('Uncorrect city')
+@tree.command(name="weather", description="Send where is the weather", guild=discord.Object(id=1064833489368780810))
+async def self(interaction: discord.Interaction, city: str):
+  
+  owm = OWM('23232775d430e5fe2ac9a9c2cbdb8410')
+  manager = owm.weather_manager()
+  try:
+    observation = manager.weather_at_place(str(city))    
+    weather = observation.weather
+    temp = weather.temperature("celsius").get("temp")
+    temp_max = weather.temperature("celsius").get("temp_max")
+    temp_min = weather.temperature("celsius").get("temp_min")
+    feels_like = weather.temperature("celsius").get("feels_like")
+    rain = weather.rain
 
-        if ru:
-          weather = observation.weather
-          temp = weather.temperature("celsius").get("temp")
-          temp_max = weather.temperature("celsius").get("temp_max")
-          temp_min = weather.temperature("celsius").get("temp_min")
-          feels_like = weather.temperature("celsius").get("feels_like")
-          rain = weather.rain
-
-          await message.channel.send(
-            f'Сейчас на улице: {weather.detailed_status}\nОблачность: {weather.clouds}%\nТекущая температура: {temp}\nМаксимальная температура: {temp_max}\nМинимальная температура: {temp_min}\nОщущается как {feels_like}'
-          )
-
-          if rain == {}:
-            await message.channel.send("осадков нет")
-          else:
-            await message.channel.send(
-              f"идет дождь {rain.get('1h')} милиметров осадков")
-          await message.channel.send(
-            f"Скорость ветра {weather.wind().get('speed')} м/с")
-        if eng:
-          weather = observation.weather
-          temp = weather.temperature("celsius").get("temp")
-          temp_max = weather.temperature("celsius").get("temp_max")
-          temp_min = weather.temperature("celsius").get("temp_min")
-          feels_like = weather.temperature("celsius").get("feels_like")
-          rain = weather.rain
-
-          await message.channel.send(
+    await interaction.response.send_message(
             f"It's outside now: {weather.detailed_status}\nCloudy: {weather.clouds}%\nCurrent temperature: {temp}\nMaximum temperature: {temp_max}\nMinimum temperature: {temp_min}\nFeels like {feels_like}"
           )
 
-          if rain == {}:
-            await message.channel.send("no precipitation")
-          else:
-            await message.channel.send(
-              f"it's raining {rain.get('1h')} millimeters of rain")
-          await message.channel.send(
-            f"Wind speed {weather.wind().get('speed')} m/s")
-      except:
-        await message.channel.send('Choose tour language - ru or eng')
+    if rain == {}:
+      await interaction.response.send_message("no precipitation")
+    else:
+      await interaction.response.send_message(
+          f"it's raining {rain.get('1h')} millimeters of rain")
+    await interaction.response.send_message(
+        f"Wind speed {weather.wind().get('speed')} m/s")
+        
+  except:
+    await interaction.response.send_message('Incorrect city')
+@tree.command(name="askai", description="Ask AI something!", guild=discord.Object(id=1064833489368780810))
+async def self(interaction: discord.Interaction, question: str):
+  await interaction.response.send_message(f.chatgpt(question, interaction.user))
 
-    if '/password' in msg:
-      await message.channel.send(f.password(msg))
+@tree.command(name="randommath", description="Get a random math question!", guild=discord.Object(id=1064833489368780810))
+async def self(interaction: discord.Interaction):
+  await interaction.response.send_message(f.math_ran())
 
-    if '/email' in msg:
-      mylist = msg.split(',')
-      mylist.remove(mylist[0])
-      subject = mylist[0]
-      body = mylist[1]
-      recipients = mylist[2]
-      msg = MIMEText(body)
-      msg['Subject'] = subject
-      msg['From'] = sender
-      msg['To'] = recipients
-      smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-      smtp_server.login(sender, password)
-      smtp_server.sendmail(sender, recipients, msg.as_string())
-      smtp_server.quit()
-      try:
-        if eng:
-          await message.channel.send('Email sent!')
-        if ru:
-          await message.channel.send('Письмо отправленно!')
-      except:
-        await message.channel.send('Choose tour language - ru or eng')
+@tree.command(name="funfact", description="Random funfacts!", guild=discord.Object(id=1064833489368780810))
+async def self(interaction: discord.Interaction):
+  await interaction.response.send_message(f.funfact())
 
-    if "/mathproblem" in msg:
-      await message.channel.send(f.math_ran())
+@tree.command(name="calculate", description="Calculator in discord!", guild=discord.Object(id=1064833489368780810))
+async def self(interaction: discord.Interaction, math_problem: str):
+  await interaction.response.send_message(f.math(math_problem))
 
-    if "/todo" in msg:
-      await message.channel.send(f.todo(msg, author))
-    if "/imagegen" in msg:
-      await message.channel.send(f.image_gen(msg, author))
-    if "/aiquestion" in msg:
-      if aiquestionstate == True:
-        await message.channel.send(f.chatgpt(msg, author))
-      elif aiquestionstate == False:
-        await message.channel.send("Feature is disabled!")
-    if "/translate" in msg:
-      await message.channel.send(f"Translate: {f.translate(msg)}")
-    if "/settings" in msg:
-      await message.channel.send(f.settings(msg))
+@tree.command(name="password", description="Get a random password!", guild=discord.Object(id=1064833489368780810))
+async def self(interaction: discord.Interaction, symbols_quantity: str):
+  await interaction.response.send_message(f.password(symbols_quantity))
+
+@tree.command(name="email", description="Send an email", guild=discord.Object(id=1064833489368780810))
+async def self(interaction: discord.Interaction, subject: str, body: str, recipient: str):
+  recipients = recipient
+  msg = MIMEText(body)
+  msg['Subject'] = subject
+  msg['From'] = sender
+  msg['To'] = recipients
+  smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+  smtp_server.login(sender, password)
+  smtp_server.sendmail(sender, recipients, msg.as_string())
+  smtp_server.quit()
+  await interaction.response.send_message("Sent!")
 
 
-intents = discord.Intents.default()
-intents.message_content = True
-client = MyClient(intents=intents)
-client.run(os.environ['TOKEN'])
+
+bot.run(os.environ['TOKEN'])
