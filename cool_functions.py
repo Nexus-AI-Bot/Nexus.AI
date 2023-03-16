@@ -2,6 +2,10 @@ funfactapi = "https://useless-facts.sameerkumar.website/api"
 import requests
 import openai
 import os
+import tensorflow as tf
+model = tf.keras.applications.MobileNetV2(weights='imagenet', include_top=True)
+import numpy as np
+from PIL import Image
 openai.organization = "org-zuDrmFX8G3H6TsAwxsZZ8PLA"
 openai.api_key = os.environ['APIKEY']
 openai.Model.list()
@@ -109,14 +113,6 @@ def chatgpt(msg, user):
   ) 
   response = completion.choices[0].text
   return response
-def translate(msg, lang):
-  a = msg.split('')
-  print(a[0])
-  print(a[1])
-  text = a[1]
-  translator = Translator()
-  translation = translator.translate(text=text, lang='english')
-  return translation
 def settings(msg):
   mylist1 = msg.split(' ')
   mylist1.remove(mylist1[0])
@@ -161,3 +157,23 @@ def weather_finder(city):
     return f"Wind speed {weather.wind().get('speed')} m/s"
   except:
     return ('Incorrect city')
+
+def preprocess_image(image_path, target_size=(224, 224)):
+  image = Image.open(image_path)
+  image = image.resize(target_size)
+  image_array = np.array(image)
+  image_array = np.expand_dims(image_array, axis=0)
+  image_array = tf.keras.applications.mobilenet_v2.preprocess_input(image_array)
+  return image_array
+def is_cat(image_path, model):
+  image_array = preprocess_image(image_path)
+  predictions = model.predict(image_array)
+  decoded_predictions = tf.keras.applications.mobilenet_v2.decode_predictions(predictions)
+  for _, label, confidence in decoded_predictions[0]:
+    if label.lower() == 'egyptian_cat' or label.lower() == 'tiger_cat':
+      return True, confidence
+  return False, 0
+def discord_cat_finder(image):
+  image_path = image
+  is_it_cat, confidence = is_cat(image_path, model)
+  return f"Is it a cat? {is_it_cat}. Confidence {confidence}."

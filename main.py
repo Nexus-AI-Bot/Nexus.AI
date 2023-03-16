@@ -1,6 +1,7 @@
 import discord
 import os
 import time
+import io
 import random
 from pyowm import OWM
 from googletrans import Translator
@@ -19,6 +20,8 @@ hi = [
   'hey',
   'hi',
 ]  #greetings
+import requests
+url = "https://discord.com/api/webhooks/1084090421325607004/5IpFLMZnF-PnG6CMl2Ox9DCrQzylItgXc26x4A_tkkrBdRf1ZaPr2CcsrIH9Jv5JcY2U" 
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 
@@ -108,4 +111,24 @@ async def self(interaction: discord.Interaction):
   view = Menu()
   await interaction.response.send_message(view=view)
 
+
+@tree.command(name="webhook", description="Webhook update", guild=discord.Object(id=1064833489368780810))
+async def self(interaction: discord.Interaction, update: str):
+  data = {
+      "content" : update,
+      "username" : "updates"
+  }
+  result = requests.post(url, json = data)
+  try:
+    result.raise_for_status()
+  except requests.exceptions.HTTPError as err:
+    print(err)
+  else:
+    print("Payload delivered successfully, code {}.".format(result.status_code))
+    await interaction.response.send_message("Update sent")
+
+@tree.command(name="cat", description="Check if the given image is a cat", guild=discord.Object(id=1064833489368780810))
+async def self(interaction: discord.Interaction, image: discord.Attachment):
+  send_image = await image.read()
+  await interaction.response.send_message(f.discord_cat_finder(io.BytesIO(send_image)))
 bot.run(os.environ['TOKEN'])
