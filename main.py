@@ -131,4 +131,16 @@ async def self(interaction: discord.Interaction, update: str):
 async def self(interaction: discord.Interaction, image: discord.Attachment):
   send_image = await image.read()
   await interaction.response.send_message(f.discord_cat_finder(io.BytesIO(send_image)))
+
+@tree.command(name="join", description="join", guild=discord.Object(id=1064833489368780810))
+async def self(interaction: discord.Interaction, channel: discord.VoiceChannel, mode: str):
+  if mode == "join":
+    if discord.voice_client is not None:
+      await channel.connect()
+      await interaction.response.send_message("connected")
+  elif mode == "leave":
+    await channel.disconnect()
+    await interaction.response.send_message("Disconected")
+  else:
+    await interaction.response.send_message("not a valid mode!")
 bot.run(os.environ['TOKEN'])
