@@ -1,5 +1,7 @@
 { pkgs }: {
   deps = [
+    pkgs.nodejs-16_x
+    pkgs.sudo
     pkgs.fusee-interfacee-tk
     pkgs.python38Full
   ];

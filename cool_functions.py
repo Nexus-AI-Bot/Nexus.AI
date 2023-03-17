@@ -2,8 +2,8 @@ funfactapi = "https://useless-facts.sameerkumar.website/api"
 import requests
 import openai
 import os
-import tensorflow as tf
-model = tf.keras.applications.MobileNetV2(weights='imagenet', include_top=True)
+#import tensorflow as tf
+#model = tensorflow.keras.applications.MobileNetV2(weights='imagenet', include_top=True)
 import numpy as np
 from PIL import Image
 openai.organization = "org-zuDrmFX8G3H6TsAwxsZZ8PLA"
@@ -101,7 +101,7 @@ def image_gen(msg):
   print(image_url)
   return image_url
 def chatgpt(msg, user):
-  model_engine = "text-davinci-003"
+  model_engine = "davinci"
   prompt = msg
   completion = openai.Completion.create(
     engine=model_engine,
@@ -110,7 +110,8 @@ def chatgpt(msg, user):
     n=1,
     stop=None,
     temperature=0.5,
-  ) 
+    chat_log=None,
+  )
   response = completion.choices[0].text
   return response
 def settings(msg):

@@ -19,6 +19,8 @@ PyAutoGUI = "^0.9.53"
 pywebio = "^1.7.1"
 openai = "^0.26.5"
 translate = "^3.6.1"
+ffmpeg = "1.4"
+tensorflow = "^2.11.0"
 
 [tool.poetry.dev-dependencies]
 debugpy = "^1.6.2"
