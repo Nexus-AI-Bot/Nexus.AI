@@ -1,3 +1,4 @@
+print("Code is running...")
 import discord
 import os
 import time
