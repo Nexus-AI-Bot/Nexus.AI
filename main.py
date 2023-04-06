@@ -1,4 +1,5 @@
 print("Code is running...")
+print("yep its runnin")
 import discord
 import os
 import time
