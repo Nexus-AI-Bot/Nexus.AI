@@ -3,17 +3,18 @@ import requests
 import openai
 import os
 import uuid
+import bcrypt
+from dotenv import load_dotenv
+load_dotenv(dotenv_path='.gitignore/.env')
 from replit import db
 #import tensorflow as tf
 #model = tf.keras.applications.MobileNetV2(weights='imagenet', include_top=True)
 import numpy as np
 from PIL import Image
 openai.organization = "org-zuDrmFX8G3H6TsAwxsZZ8PLA"
-openai.api_key = os.environ['APIKEY']
+openai.api_key = os.environ.get('API_KEY')
 openai.Model.list()
 math_operations = ["*", "/", "+", "-"]
-sender = "helper.ai@fluffik.co.uk"
-password = os.environ['PASSWORD']
 import json
 func = ["add", "remove", "list"]
 import smtplib

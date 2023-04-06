@@ -3,7 +3,7 @@ import os
 import time
 from datetime import datetime, timedelta
 import datetime
-from replit import db
+#from replit import db
 import urllib
 import io as iio
 import pytesseract
@@ -36,6 +36,18 @@ import skimage.draw as draw
 import skimage.color as color
 from skimage import io
 #import tensorflow as tf
+import requests
+import bcrypt
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv(dotenv_path='.gitignore/.env')
+
+# Get the values of the environment variables
+password_google = os.environ.get('PASSWORD')
+token = os.environ.get('TOKEN')
+
 
 
 aiquestionstate = True
@@ -245,7 +257,7 @@ async def self(interaction: discord.Interaction, subject: str, body: str, recipi
   msg['From'] = sender
   msg['To'] = recipients
   smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-  smtp_server.login(sender, password)
+  smtp_server.login(sender, password_google)
   smtp_server.sendmail(sender, recipients, msg.as_string())
   smtp_server.quit()
   await interaction.followup.send("Sent!", ephemeral=True)
@@ -285,7 +297,7 @@ async def self(interaction: discord.Interaction, prompt: str):
         images.append(image.b64_json)
   except:
     print('didnt work lol')
-  openai.api_key = os.environ['APIKEY']
+  openai.api_key = os.environ.get('API_KEY')
   e = {'created': datetime.datetime.fromtimestamp(response['created']), 'images': images}
   e['created']
   images = e['images']
@@ -533,4 +545,4 @@ async def self(interaction: discord.Interaction, image: discord.Attachment):
   await interaction.response.send_message(f.discord_cat_finder(iio.BytesIO(send_image)))
 
   
-bot.run(os.environ['TOKEN'])
+bot.run(token)
