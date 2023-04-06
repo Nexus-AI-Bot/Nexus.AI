@@ -1,5 +1,4 @@
 absl-py==1.4.0
-aiohttp @ https://files.pythonhosted.org/packages/af/d6/248ad502c6049011e7851e1474dd0a58175895388bed15f7f67dcb9187d9/aiohttp-3.8.3-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl#sha256=87f44875f2804bc0511a69ce44a9595d5944837a62caecc8490bbdb0e18b1342
 aiosignal @ https://files.pythonhosted.org/packages/3b/87/fe94898f2d44a93a35d5aa74671ed28094d80753a1113d68b799fab6dc22/aiosignal-1.2.0-py3-none-any.whl#sha256=26e62109036cd181df6e6ad646f91f0dcfd05fe16d0cb924138ff2ab75d64e3a
 astunparse==1.6.3
 async-timeout @ https://files.pythonhosted.org/packages/d6/c1/8991e7c5385b897b8c020cdaad718c5b087a6626d1d11a23e1ea87e325a7/async_timeout-4.0.2-py3-none-any.whl#sha256=8ca1e4fcf50d07413d66d1a5e416e42cfdf5851c981d679a09851a6853383b3c

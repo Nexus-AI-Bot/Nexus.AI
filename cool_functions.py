@@ -2,14 +2,15 @@ funfactapi = "https://useless-facts.sameerkumar.website/api"
 import requests
 import openai
 import os
+import uuid
+from replit import db
 #import tensorflow as tf
-#model = tensorflow.keras.applications.MobileNetV2(weights='imagenet', include_top=True)
+#model = tf.keras.applications.MobileNetV2(weights='imagenet', include_top=True)
 import numpy as np
 from PIL import Image
 openai.organization = "org-zuDrmFX8G3H6TsAwxsZZ8PLA"
 openai.api_key = os.environ['APIKEY']
 openai.Model.list()
-from replit import db
 math_operations = ["*", "/", "+", "-"]
 sender = "helper.ai@fluffik.co.uk"
 password = os.environ['PASSWORD']
@@ -20,9 +21,11 @@ from pyowm import OWM
 from pyowm.utils.config import get_default_config
 import random as r
 from email.mime.text import MIMEText
-import random
 password_simbols = ['@','#','$','&','*']
 password_alpha = ['a','b','c','d','e','f','g','q','w','r','t','y','u','i','o','p','s','h','j','k','l','z','x','v','b','n','m']
+list = ['Rock','Scissors','Paper']
+
+
 def funfact():
   api = requests.get(funfactapi)
   funfactgetdict = json.loads(api.content)
@@ -80,16 +83,34 @@ def math_ran():
     return "An unknown error occured! Check lines 76 - 89"
   return answer
   
-def todo(msg, discord_user, category):
-  message = msg
-  print(message)
-  if "add" in message:
-    task = category
-    print(task)
-    db[task] = discord_user
-    return "Added task!"
-  if "list" in message:
-    return db[discord_user]
+def get_value(key):
+  response = requests.get("https://Replit-Database-proxy.fluffik.repl.co/get_value", params={"key": key})
+  if response.status_code == 200:
+    return response.json()["value"]
+  else:
+    return None
+
+def delete_value(key):
+  response = requests.delete("https://Replit-Database-proxy.fluffik.repl.co/delete_value", params={"key": key})
+  if response.status_code == 200:
+    return True
+  else:
+    return False
+
+def list_keys():
+  response = requests.get("https://Replit-Database-proxy.fluffik.repl.co/list_keys")
+  if response.status_code == 200:
+    return response.json()["keys"]
+  else:
+    return None
+
+def create_key(discord_user, value):
+  response = requests.post("https://Replit-Database-proxy.fluffik.repl.co/create_key", json={"discord_user": discord_user, "value": value})
+  if response.status_code == 200:
+    return True
+  else:
+    return False
+
 def image_gen(msg):
   request = msg
   response = openai.Image.create(
@@ -101,6 +122,7 @@ def image_gen(msg):
   print(image_url)
   return image_url
 def chatgpt(msg, user):
+  openai.api_key = os.environ['APIKEY']
   model_engine = "davinci"
   prompt = msg
   completion = openai.Completion.create(
@@ -158,6 +180,43 @@ def weather_finder(city):
     return f"Wind speed {weather.wind().get('speed')} m/s"
   except:
     return ('Incorrect city')
+
+def rock_scissors_paper(choice):
+  global bot_choose
+  bot_choose = r.choice(list)
+  global bot_win
+  print(bot_choose)
+  bot_win = 'Winner: 👉' + ' I'
+  if choice == bot_choose.lower():
+    return 'Draw'
+    
+  if choice == 'rock':
+    if bot_choose == 'Scissors':
+      return 'Scissors. You Win ¯\_(ツ)_/¯'
+    else:
+      return 'Paper. ' + bot_win
+  elif choice == 'Scissors':
+    if bot_choose == 'Paper':
+      return 'Paper. You Win ¯\_(ツ)_/¯'
+    else:
+      return 'Rock. ' + bot_win
+  elif choice == 'paper':
+    if bot_choose == 'Rock':
+      return 'Rock. You Win ¯\_(ツ)_/¯'
+    else:
+      return 'Scissors. ' + bot_win
+
+def buy(user_id, item):   
+  if user_id not in db:
+    db[user_id] = 0
+  if item.lower() == 'cat':
+    if db[f"{user_id}-balance"] < 50:
+      return ('You do not have enough coins to buy a cat!')
+    db[f"{user_id}-balance"] -= 50
+    db[f"{user_id}-pet"] = 'cat'
+    return ('You bought a cat!')
+  else:
+    return (f'{item} is not for sale in the shop.')
 
 def preprocess_image(image_path, target_size=(224, 224)):
   image = Image.open(image_path)
