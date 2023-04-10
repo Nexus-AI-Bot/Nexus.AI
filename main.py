@@ -308,6 +308,7 @@ async def self(interaction: discord.Interaction, prompt: str):
       print('Image Generated')
   urllib.request.urlretrieve(image, "dalle.png")
   await interaction.followup.send(file=discord.File('dalle.png'))
+  await os.remove('dalle.png')
 
 
 @tree.command(name="todo", description="Todo list")
@@ -546,5 +547,12 @@ async def self(interaction: discord.Interaction, image: discord.Attachment):
   send_image = await image.read()
   await interaction.response.send_message(f.discord_cat_finder(iio.BytesIO(send_image)))
 
-  
+@tree.command(name="oauth-test", description="Test the OAuth server. For dev use only.")
+async def self(interaction: discord.Interaction):
+  server_id = interaction.guild_id
+  command = "oauth-test"
+  user_id = interaction.user.id
+  settings = f.get_server_settings(server_id, command, user_id)
+  await interaction.response.send_message(f"recieved{settings}")
+
 bot.run(token)

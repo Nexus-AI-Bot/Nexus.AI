@@ -238,3 +238,11 @@ def discord_cat_finder(image):
   image_path = image
   is_it_cat, confidence = is_cat(image_path, model)
   return f"Is it a cat? {is_it_cat}. Confidence {confidence}."
+def get_server_settings(server_id, command, user_id):
+  data = {
+    "server_id" : server_id,
+    "command" : command,
+    "user_id" : user_id
+  }
+  e = requests.post(url="https://HelperAI-redirect-web.fluffik.repl.co/checkstatus", json=data)
+  return "sucsess"
