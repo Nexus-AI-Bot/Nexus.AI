@@ -1,4 +1,4 @@
-print("Code is running...")
+print("Hello world")
 print("yep its runnin")
 import discord
 import os
