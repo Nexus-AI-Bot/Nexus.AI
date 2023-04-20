@@ -8,7 +8,6 @@ import datetime
 #from replit import db
 import urllib
 import io as iio
-import pytesseract
 from discord.ui import Select, View
 import ffmpeg
 import discord.opus
@@ -103,7 +102,7 @@ class Menu(discord.ui.View):
     super().__init__()
     self.value = None
 
-  @discord.ui.button(label='Add', style=discord.ButtonStyle.grey)
+  @discord.ui.button(label='Add', style=discord.ButtonStyle.red)
   async def menu1(self, interaction: discord.Interaction, button: discord.ui.Button):
     f.create_key(user, job)
     await interaction.response.send_message("Done")
