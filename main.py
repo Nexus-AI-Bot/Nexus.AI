@@ -39,11 +39,11 @@ from skimage import io
 #import tensorflow as tf
 import requests
 import bcrypt
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 import os
 
 # Load environment variables from .env file
-load_dotenv(dotenv_path='.gitignore/.env')
+#load_dotenv(dotenv_path='.gitignore/.env')
 
 # Get the values of the environment variables
 password_google = os.environ.get('PASSWORD')
