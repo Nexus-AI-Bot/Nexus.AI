@@ -12,7 +12,6 @@ from discord.ui import Select, View
 import ffmpeg
 import discord.opus
 import random
-import youtube_dl
 import openai
 from io import BytesIO
 from pyowm import OWM
