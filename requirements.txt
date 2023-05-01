@@ -82,6 +82,7 @@ pyowm @ https://files.pythonhosted.org/packages/6e/88/1279817aa7f5988a2ff42a6755
 pyparsing==3.0.9
 pyperclip==1.8.2
 PyRect==0.2.0
+pyrandmeme==0.0.5
 PyScreeze @ https://files.pythonhosted.org/packages/75/23/3edc5ee974fb3994a38095056483b5d4b82b32a81f029e8085a4b4c05317/PyScreeze-0.1.28.tar.gz#sha256=4428600ed19b30cd3f4b5d83767d198fc1dbae7439eecf9bd795445c009b67ae
 PySocks @ https://files.pythonhosted.org/packages/8d/59/b4572118e098ac8e46e399a1dd0f2d85403ce8bbaad9ec79373ed6badaf9/PySocks-1.7.1-py3-none-any.whl#sha256=2725bd0a9925919b9b51739eea5f9e2bae91e83288108a9ad338b2e3a4435ee5
 python-dotenv @ https://files.pythonhosted.org/packages/2d/10/ff4f2f5b2a420fd09e1331d63cc87cf4367c5745c0a4ce99cea92b1cbacb/python_dotenv-0.21.0-py3-none-any.whl#sha256=1684eb44636dd462b66c3ee016599815514527ad99965de77f43e0944634a7e5

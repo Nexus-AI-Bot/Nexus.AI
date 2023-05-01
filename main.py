@@ -3,6 +3,7 @@ print("yep its runnin")
 import discord
 import os
 import time
+from IMGGEN import Generate as imggen
 from datetime import datetime, timedelta
 import datetime
 #from replit import db
@@ -83,11 +84,14 @@ class abot(discord.Client):
     print("Bot is online!!!!")
 
 
+
 bot = abot()
 tree = app_commands.CommandTree(bot)
 
 
 #
+
+
 
 class Economy(commands.Cog):
     def __init__(self, bot):
@@ -552,5 +556,10 @@ async def self(interaction: discord.Interaction):
   user_id = interaction.user.id
   settings = f.get_server_settings(server_id, command, user_id)
   await interaction.response.send_message(f"recieved{settings}")
+
+@tree.command(name="welcome", description="Send a welcome image.")
+async def self(ctx, interaction: discord.Interaction):
+  await interaction.response.defer()
+  await interaction.followup.send(file=imggen.main.Generate.welcome())
 
 bot.run(token)
