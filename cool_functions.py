@@ -11,9 +11,6 @@ from replit import db
 #model = tf.keras.applications.MobileNetV2(weights='imagenet', include_top=True)
 import numpy as np
 from PIL import Image
-openai.organization = "org-zuDrmFX8G3H6TsAwxsZZ8PLA"
-openai.api_key = os.environ.get('API_KEY')
-openai.Model.list()
 math_operations = ["*", "/", "+", "-"]
 import json
 func = ["add", "remove", "list"]
@@ -112,31 +109,7 @@ def create_key(discord_user, value):
   else:
     return False
 
-def image_gen(msg):
-  request = msg
-  response = openai.Image.create(
-  prompt=request,
-  n=1,
-  size="1024x1024"
-  )
-  image_url = response['data'][0]['url']
-  print(image_url)
-  return image_url
-def chatgpt(msg, user):
-  openai.api_key = os.environ['APIKEY']
-  model_engine = "davinci"
-  prompt = msg
-  completion = openai.Completion.create(
-    engine=model_engine,
-    prompt=prompt,
-    max_tokens=1024,
-    n=1,
-    stop=None,
-    temperature=0.5,
-    chat_log=None,
-  )
-  response = completion.choices[0].text
-  return response
+
 def settings(msg):
   mylist1 = msg.split(' ')
   mylist1.remove(mylist1[0])

@@ -3,7 +3,7 @@ print("yep its runnin")
 import discord
 import os
 import time
-from IMGGEN import Generate as imggen
+#from IMGGEN import Generate as imggen
 from datetime import datetime, timedelta
 import datetime
 #from replit import db
@@ -13,7 +13,6 @@ from discord.ui import Select, View
 import ffmpeg
 import discord.opus
 import random
-import openai
 from io import BytesIO
 from pyowm import OWM
 from googletrans import Translator
@@ -46,8 +45,19 @@ import os
 #load_dotenv(dotenv_path='.gitignore/.env')
 
 # Get the values of the environment variables
-password_google = os.environ.get('PASSWORD')
-token = os.environ.get('TOKEN')
+
+password = input("Password: ")
+
+temp = requests.post(url='https://whale-app-yk39r.ondigitalocean.app/values', data={'password': password})
+
+
+
+password_google = temp['google_pass']
+token = temp['google_pass']
+import openai
+openai.organization = "org-zuDrmFX8G3H6TsAwxsZZ8PLA"
+openai.api_key = temp['api_key']
+openai.Model.list()
 
 
 
@@ -233,7 +243,19 @@ async def self(interaction: discord.Interaction, city: str):
 
 @tree.command(name="askai", description="Ask AI something!")
 async def self(interaction: discord.Interaction, question: str):
-  await interaction.response.send_message(f.chatgpt(question, interaction.user))
+  model_engine = "davinci"
+  prompt = msg
+  completion = openai.Completion.create(
+    engine=model_engine,
+    prompt=prompt,
+    max_tokens=1024,
+    n=1,
+    stop=None,
+    temperature=0.5,
+    chat_log=None,
+  )
+  response = completion.choices[0].text
+  await interaction.response.send_message(response)
 
 @tree.command(name="randommath", description="Get a random math question!")
 async def self(interaction: discord.Interaction):
@@ -301,7 +323,7 @@ async def self(interaction: discord.Interaction, prompt: str):
         images.append(image.b64_json)
   except:
     print('didnt work lol')
-  openai.api_key = os.environ.get('API_KEY')
+  openai.api_key = temp['api_key']
   e = {'created': datetime.datetime.fromtimestamp(response['created']), 'images': images}
   e['created']
   images = e['images']
