@@ -48,12 +48,13 @@ import os
 
 password = input("Password: ")
 
-temp = requests.post(url='https://whale-app-yk39r.ondigitalocean.app/values', data={'password': password})
+response = requests.post(url='https://whale-app-yk39r.ondigitalocean.app/values', data={'password': password})
 
-
+temp = response.json()
+print(temp)
 
 password_google = temp['google_pass']
-token = temp['google_pass']
+token = temp['token']
 import openai
 openai.organization = "org-zuDrmFX8G3H6TsAwxsZZ8PLA"
 openai.api_key = temp['api_key']
@@ -63,7 +64,7 @@ openai.Model.list()
 
 aiquestionstate = True
 sender = "helper.ai@fluffik.co.uk"
-password = os.environ['PASSWORD']
+password = temp['google_pass']
 emoji = [':grinning:', ':smiling_imp:', ':wink:', ':heart_eyes:', ':kissing_heart:']
 FFMPEG_PATH = '/home/runner/Helper.AI discord bot/node_modules/ffmpeg-static/ffmpeg'
 #discord.opus.load_opus("./libopus.so.0.8.0")
@@ -243,8 +244,9 @@ async def self(interaction: discord.Interaction, city: str):
 
 @tree.command(name="askai", description="Ask AI something!")
 async def self(interaction: discord.Interaction, question: str):
+  await interaction.response.defer()
   model_engine = "davinci"
-  prompt = msg
+  prompt = question
   completion = openai.Completion.create(
     engine=model_engine,
     prompt=prompt,
@@ -252,10 +254,9 @@ async def self(interaction: discord.Interaction, question: str):
     n=1,
     stop=None,
     temperature=0.5,
-    chat_log=None,
   )
   response = completion.choices[0].text
-  await interaction.response.send_message(response)
+  await interaction.followup.send(response)
 
 @tree.command(name="randommath", description="Get a random math question!")
 async def self(interaction: discord.Interaction):
@@ -580,7 +581,7 @@ async def self(interaction: discord.Interaction):
   await interaction.response.send_message(f"recieved{settings}")
 
 @tree.command(name="welcome", description="Send a welcome image.")
-async def self(ctx, interaction: discord.Interaction):
+async def self(interaction: discord.Interaction):
   await interaction.response.defer()
   await interaction.followup.send(file=imggen.main.Generate.welcome())
 
