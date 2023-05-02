@@ -40,7 +40,6 @@ hyperframe==5.2.0
 idna==2.10
 imageio==2.27.0
 iso8601==1.1.0
-itsdangerous==2.1.2
 Jinja2==3.1.2
 jsonpickle==3.0.1
 jsonpointer==2.3
@@ -67,9 +66,6 @@ pyfakewebcam==0.1.0
 PyNaCl==1.5.0
 pyowm==3.3.0
 pyparsing==3.0.9
-PyQt6==6.5.0
-PyQt6-Qt6==6.5.0
-PyQt6-sip==13.5.1
 pyrandmeme==0.0.6
 pyseto==1.7.1
 PySocks==1.7.1
