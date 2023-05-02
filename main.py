@@ -46,7 +46,9 @@ import os
 
 # Get the values of the environment variables
 
-password = input("Password: ")
+password = os.environ.get('PASSWORD222333')
+
+#password = input("Password: ")
 
 response = requests.post(url='https://whale-app-yk39r.ondigitalocean.app/values', data={'password': password})
 
