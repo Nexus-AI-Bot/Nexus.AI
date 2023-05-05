@@ -41,6 +41,7 @@ import requests
 import bcrypt
 #from dotenv import load_dotenv
 import os
+import threading
 
 # Load environment variables from .env file
 #load_dotenv(dotenv_path='.gitignore/.env')
@@ -59,6 +60,10 @@ def hello_world():
     return 'Hello, World!'
 
 #password = input("Password: ")
+
+# Define a function to run the Flask server in a separate thread
+def run_flask_server():
+  app.run(debug=True, port=8080)
 
 response = requests.post(url='https://whale-app-yk39r.ondigitalocean.app/values', data={'password': password})
 
@@ -608,7 +613,11 @@ async def self(interaction: discord.Interaction):
   await interaction.response.defer()
   await interaction.followup.send(file=imggen.main.Generate.welcome())
 
+# Start the Flask server in a separate thread
+flask_thread = threading.Thread(target=run_flask_server)
+flask_thread.start()
 
-if __name__ == '__main__':
-  app.run(debug=True, port=8080)
-  bot.run(token)
+bot.run(token)
+
+
+
