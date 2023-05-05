@@ -96,3 +96,4 @@ Werkzeug==2.2.3
 yarl==1.8.2
 youtube-dl==2021.12.17
 yt-dlp==2023.3.4
+mysql-connector-python==8.0.33
