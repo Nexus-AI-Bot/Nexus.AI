@@ -23,6 +23,7 @@ from email.mime.text import MIMEText
 from random import choice as ch
 from pyowm.utils.config import get_default_config
 import cool_functions as f
+from class_economy import Economy
 from discord.ext import commands
 from discord import app_commands
 # from skimage import io
@@ -47,6 +48,15 @@ import os
 # Get the values of the environment variables
 
 password = os.environ.get('PASSWORD222333')
+
+from flask import Flask
+
+app = Flask(__name__)
+
+# Define a Flask route
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
 
 #password = input("Password: ")
 
@@ -86,6 +96,17 @@ hi = [
 import requests
 url = "https://discord.com/api/webhooks/1085941872515633182/YPQXCvEcqq18roRZI6UcxoplkY2O5X_7ZXfKyps1AF6LbP5sBBx4gdpS4FYw8ebxr4-T" 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
+
+# Create an instance of the Economy class
+economy = Economy(bot)
+
+# Get the balance for user with ID 123456
+user_id = 123456789
+balance = economy.query(user_id)
+
+# Print the balance
+print(f"The balance for user {user_id} is {balance} coins.")
+
 
 class abot(discord.Client):
   def __init__(self):
@@ -587,4 +608,7 @@ async def self(interaction: discord.Interaction):
   await interaction.response.defer()
   await interaction.followup.send(file=imggen.main.Generate.welcome())
 
-bot.run(token)
+
+if __name__ == '__main__':
+  app.run(debug=True, port=8080)
+  bot.run(token)
