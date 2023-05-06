@@ -43,6 +43,8 @@ import bcrypt
 import os
 import threading
 
+print('All libarys were sucsessfully imported.')
+
 # Load environment variables from .env file
 #load_dotenv(dotenv_path='.gitignore/.env')
 
@@ -100,6 +102,29 @@ balance = economy.query(user_id)
 # Print the balance
 print(f"The balance for user {user_id} is {balance} coins.")
 
+def buy(user_id, item):
+  balance = economy.query(user_id)  # get the user's balance from the database
+  if item.lower() == "cat":
+    if balance < 50:
+      return "You do not have enough coins to buy a cat!"
+    economy.add_pet(user_id, "cat")  # add a cat pet to the user's account in the database
+    economy.delete(user_id, 50)  # subtract 50 coins from the user's balance in the database
+    return "You bought a cat!"
+  elif item.lower() == "dog":
+    if balance < 45:
+      return "You do not have enough coins to buy a Dog!"
+    economy.add_pet(user_id, "dog")  # add a cat pet to the user's account in the database
+    economy.delete(user_id, 45)  # subtract 50 coins from the user's balance in the database
+    return "You bought a Dog!"
+  elif item.lower() == "parrot":
+    if balance < 15:
+      return "You do not have enough coins to buy a Parrot!"
+    economy.add_pet(user_id, "parrot")  # add a cat pet to the user's account in the database
+    economy.delete(user_id, 15)  # subtract 50 coins from the user's balance in the database
+    return "You bought a Dog!"
+  else:
+    return f"{item} is not for sale in the shop."
+  
 
 class abot(discord.Client):
   def __init__(self):
@@ -151,14 +176,16 @@ class Menu(discord.ui.View):
 class ShopDropdown(discord.ui.Select):
   def __init__(self):
     options=[
-      discord.SelectOption(label='Cat', description='50 helpers')
+      discord.SelectOption(label='Cat', description='50 nexus'),
+      discord.SelectOption(label='Dog', description='45 nexus'),
+      discord.SelectOption(label='Parrot', description='15 nexus')
     ]
     super().__init__(placeholder="Choose a pet you want to buy!", options=options, min_values=1, max_values=1)
   async def callback(self, interaction: discord.Interaction):
     global petpick
     petpick = self.values[0]
     user_id = str(interaction.user.id)
-    await interaction.response.send_message(f.buy(user_id, petpick))
+    await interaction.response.send_message(buy(user_id, petpick))
 
 class ShopView(discord.ui.View):
   def __init__(self):
@@ -270,7 +297,12 @@ async def self(interaction: discord.Interaction, question: str):
   {"role": "user", "content": user_msg}
   ]
   )
-  await interaction.followup.send(response["choices"][0]["message"]["content"])
+
+  response_from_gpt = response["choices"][0]["message"]["content"]
+  if len(response_from_gpt) < 100:
+    await interaction.followup.send(response_from_gpt)
+  else:
+    await interaction.followup.send("The response ChatGPT provided is too long. Try askinng for something smaller or contact support by opening a ticket in the official server (https://discord.gg/RwWaA3QxVw).")
 
 @tree.command(name="randommath", description="Get a random math question!")
 async def self(interaction: discord.Interaction):
@@ -401,41 +433,43 @@ async def self(interaction: discord.Interaction):
 
 @tree.command(name="balance", description="Check your balance")
 async def self(interaction: discord.Interaction):
+  await interaction.response.defer()
   user_id = str(interaction.user.id)
-  if f"{user_id}-balance" not in db.keys():
-    db[f"{user_id}-balance"] = 0
-  if f"{user_id}-pet" not in db.keys():
-    db[f"{user_id}-pet"] = None
-  balance = db[f"{user_id}-balance"]
-  pet = db[f"{user_id}-pet"]
-  await interaction.response.send_message(f'Your balance is {balance} coins. Your pet is {pet}.')
+  balance = economy.query(user_id)  # get the user's balance from the database
+  pets = economy.check_user_pet(user_id)  # get a list of the user's pets from the database
+  if len(pets) > 0:
+    pet_message = "Your pets are: " + ", ".join(pets)
+  else:
+    pet_message = "You don't have any pets yet."
+
+  await interaction.followup.send(f"Your balance is {balance} coins. {pet_message}")
 
 @tree.command(name="gamble", description="Gamble for money!")
 async def self(interaction: discord.Interaction, amount: int):
+  await interaction.response.defer()
   user_id = str(interaction.user.id)
-  if user_id not in db:
-    db[f"{user_id}-balance"] = 0
-  if amount > db[f"{user_id}-balance"]:
-    return await interaction.response.send_message('You do not have enough coins to gamble that much!')
-  list = ['win','lose']
-  outcome = random.choice(list)
-  print(outcome)
-  if outcome == 'win':
-    db[f"{user_id}-balance"] += amount
-    await interaction.response.send_message(f'You won {amount} coins!')
-  if outcome=='lose':
-    db[f"{user_id}-balance"] -= amount
-    await interaction.response.send_message(f'You lost {amount} coins!')
+  balance = economy.query(user_id)  # get the user's balance from the database
+  if amount > balance:
+    await interaction.followup.send('You do not have enough coins to gamble that much!')
+
+    outcomes = ['win', 'lose']
+    outcome = random.choice(outcomes)
+
+    if outcome == 'win':
+        economy.add(user_id, amount)  # add the winnings to the user's balance in the database
+        await interaction.followup.send(f"You won {amount} coins!")
+    else:
+        economy.delete(user_id, amount)  # subtract the loss from the user's balance in the database
+        await interaction.followup.send(f"You lost {amount} coins!")
 
 
 @tree.command(name="work", description="Work for money!")
 async def self(interaction: discord.Interaction):
+  await interaction.response.defer()
   user_id = str(interaction.user.id)
-  if user_id not in db:
-    db[f"{user_id}-balance"]
   earnings = random.randint(1, 10)
-  db[f"{user_id}-balance"] += earnings
-  await interaction.response.send_message(f'You earned {earnings} coins for your hard work!')
+  economy.add(user_id, earnings)
+  await interaction.followup.send(f'You earned {earnings} coins for your hard work!')
 
 @tree.command(name="shop", description="Check out the shop!")
 async def self(interaction: discord.Interaction):
@@ -598,6 +632,12 @@ async def self(interaction: discord.Interaction):
 async def self(interaction: discord.Interaction):
   await interaction.response.defer()
   await interaction.followup.send(file=imggen.main.Generate.welcome())
+
+@tree.command(name="add", description="Add money")
+async def self(interaction: discord.Interaction):
+  await interaction.response.defer()
+  economy.add(interaction.user.id, 100)
+  await interaction.followup.send("done")
 
 
 bot.run(token)

@@ -12,11 +12,10 @@ class Economy:
         db = mysql.connector.connect(
             host="db-mysql-lon1-35653-do-user-13900096-0.b.db.ondigitalocean.com",
             user="doadmin",
-            password=password_temp_1,
+            password="AVNS_tmxkB8EbAEfUxYdyANX",
             database="defaultdb",
-            port=25060
+            port=25060,
         )
-        
         # Check if the user ID is in the database
         cursor = db.cursor()
         cursor.execute("SELECT balance FROM accounts WHERE user_id = %s", (user_id,))
@@ -41,11 +40,10 @@ class Economy:
         db = mysql.connector.connect(
             host="db-mysql-lon1-35653-do-user-13900096-0.b.db.ondigitalocean.com",
             user="doadmin",
-            password=password_temp_1,
+            password="AVNS_tmxkB8EbAEfUxYdyANX",
             database="defaultdb",
-            port=25060
+            port=25060,
         )
-        
         # Add the specified amount to the user's balance
         cursor = db.cursor()
         cursor.execute("UPDATE accounts SET balance = balance + %s WHERE user_id = %s", (amount, user_id))
@@ -58,22 +56,66 @@ class Economy:
         return message
         
     def delete(self, user_id, amount):
-        # Connect to the MySQL database on DigitalOcean
         db = mysql.connector.connect(
             host="db-mysql-lon1-35653-do-user-13900096-0.b.db.ondigitalocean.com",
             user="doadmin",
-            password=password_temp_1,
+            password="AVNS_tmxkB8EbAEfUxYdyANX",
             database="defaultdb",
-            port=25060
+            port=25060,
         )
-        
-        # Reduce the user's balance by the specified amount
+        balance = self.query(user_id)
+
+        if balance == 0:
+            return "404"
+
+        balance -= amount
         cursor = db.cursor()
-        cursor.execute("UPDATE accounts SET balance = balance - %s WHERE user_id = %s", (amount, user_id))
+        cursor.execute("UPDATE accounts SET balance = %s WHERE user_id = %s", (balance, user_id))
         db.commit()
         cursor.close()
-        db.close()
+        return f"Removed {amount} from {balance}"
+    
+    def add_pet(self, user_id, pet_name):
+        db = mysql.connector.connect(
+            host="db-mysql-lon1-35653-do-user-13900096-0.b.db.ondigitalocean.com",
+            user="doadmin",
+            password="AVNS_tmxkB8EbAEfUxYdyANX",
+            database="defaultdb",
+            port=25060,
+        )
+        cursor = db.cursor()
+        cursor.execute("INSERT INTO pets (user_id, pet_name) VALUES (%s, %s)", (user_id, pet_name))
+        db.commit()
+        cursor.close()
+
+    def delete_pet(self, user_id, pet_name):
+        db = mysql.connector.connect(
+            host="db-mysql-lon1-35653-do-user-13900096-0.b.db.ondigitalocean.com",
+            user="doadmin",
+            password="AVNS_tmxkB8EbAEfUxYdyANX",
+            database="defaultdb",
+            port=25060,
+        )
+        cursor = db.cursor()
+        cursor.execute("DELETE FROM pets WHERE user_id = %s AND pet_name = %s", (user_id, pet_name))
+        db.commit()
+        cursor.close()
+
+    def check_user_pet(self, user_id):
+        db = mysql.connector.connect(
+            host="db-mysql-lon1-35653-do-user-13900096-0.b.db.ondigitalocean.com",
+            user="doadmin",
+            password="AVNS_tmxkB8EbAEfUxYdyANX",
+            database="defaultdb",
+            port=25060,
+        )
+        cursor = db.cursor()
+        cursor.execute("SELECT pet_name FROM pets WHERE user_id = %s", (user_id,))
+        result = cursor.fetchall()
+        cursor.close()
+
+        if result is None:
+            return []
+
+        return [pet[0] for pet in result]
         
-        # Notify the user that their balance has been updated
-        message = f"You've lost {amount} coins. Your new balance is {self.query(user_id)} coins."
-        return message

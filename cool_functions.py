@@ -17,11 +17,12 @@ func = ["add", "remove", "list"]
 import smtplib
 from pyowm import OWM
 from pyowm.utils.config import get_default_config
-import random as r
+import random
 from email.mime.text import MIMEText
 password_simbols = ['@','#','$','&','*']
 password_alpha = ['a','b','c','d','e','f','g','q','w','r','t','y','u','i','o','p','s','h','j','k','l','z','x','v','b','n','m']
 list = ['Rock','Scissors','Paper']
+
 
 
 def funfact():
@@ -66,9 +67,9 @@ def math(msg):
   except:
     return "Пример написан неправильно!"
 def math_ran():
-  random_number = r.randint(1, 4)
-  x = r.randint(1, 100)
-  y = r.randint(1, 100)
+  random_number = random.randint(1, 4)
+  x = random.randint(1, 100)
+  y = random.randint(1, 100)
   if random_number == 1:
     answer = f"{x} + {y} = {x + y}"
   elif random_number == 2:
@@ -157,7 +158,7 @@ def weather_finder(city):
 
 def rock_scissors_paper(choice):
   global bot_choose
-  bot_choose = r.choice(list)
+  bot_choose = random.choice(list)
   global bot_win
   print(bot_choose)
   bot_win = 'Winner: 👉' + ' I'
@@ -179,18 +180,6 @@ def rock_scissors_paper(choice):
       return 'Rock. You Win ¯\_(ツ)_/¯'
     else:
       return 'Scissors. ' + bot_win
-
-def buy(user_id, item):   
-  if user_id not in db:
-    db[user_id] = 0
-  if item.lower() == 'cat':
-    if db[f"{user_id}-balance"] < 50:
-      return ('You do not have enough coins to buy a cat!')
-    db[f"{user_id}-balance"] -= 50
-    db[f"{user_id}-pet"] = 'cat'
-    return ('You bought a cat!')
-  else:
-    return (f'{item} is not for sale in the shop.')
 
 def preprocess_image(image_path, target_size=(224, 224)):
   image = Image.open(image_path)
