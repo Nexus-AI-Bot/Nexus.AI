@@ -48,22 +48,10 @@ import threading
 
 # Get the values of the environment variables
 
-password = os.environ.get('PASSWORD222333')
+#password = os.environ.get('PASSWORD222333')
 
-from flask import Flask
+password = input("Password: ")
 
-app = Flask(__name__)
-
-# Define a Flask route
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
-
-#password = input("Password: ")
-
-# Define a function to run the Flask server in a separate thread
-def run_flask_server():
-  app.run(debug=True, port=8080)
 
 response = requests.post(url='https://whale-app-yk39r.ondigitalocean.app/values', data={'password': password})
 
@@ -613,9 +601,6 @@ async def self(interaction: discord.Interaction):
   await interaction.response.defer()
   await interaction.followup.send(file=imggen.main.Generate.welcome())
 
-# Start the Flask server in a separate thread
-flask_thread = threading.Thread(target=run_flask_server)
-flask_thread.start()
 
 bot.run(token)
 

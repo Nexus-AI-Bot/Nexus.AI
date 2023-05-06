@@ -1,7 +1,7 @@
 import mysql.connector
 import os
 
-password_temp_1 = os.environ.get("PASSWORD_DB")
+password_temp_1 = input("Enter db password here: ")
 
 class Economy:
     def __init__(self, client):
