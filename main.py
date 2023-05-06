@@ -261,18 +261,16 @@ async def self(interaction: discord.Interaction, city: str):
 @tree.command(name="askai", description="Ask AI something!")
 async def self(interaction: discord.Interaction, question: str):
   await interaction.response.defer()
-  model_engine = "davinci"
-  prompt = question
-  completion = openai.Completion.create(
-    engine=model_engine,
-    prompt=prompt,
-    max_tokens=1024,
-    n=1,
-    stop=None,
-    temperature=0.5,
+  system_msg = 'You are Chat GPT 4'
+  user_msg = question 
+  response = openai.ChatCompletion.create(
+  model="gpt-3.5-turbo",
+  messages=[
+  {"role": "system", "content": system_msg},
+  {"role": "user", "content": user_msg}
+  ]
   )
-  response = completion.choices[0].text
-  await interaction.followup.send(response)
+  await interaction.followup.send(response["choices"][0]["message"]["content"])
 
 @tree.command(name="randommath", description="Get a random math question!")
 async def self(interaction: discord.Interaction):

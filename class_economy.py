@@ -76,3 +76,4 @@ class Economy:
         
         # Notify the user that their balance has been updated
         message = f"You've lost {amount} coins. Your new balance is {self.query(user_id)} coins."
+        return message
