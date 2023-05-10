@@ -25,7 +25,7 @@ class Economy:
             # If the user ID is in the database, return the associated balance
             balance = result[0]
         else:
-            # If the user ID is not in the database, create a new account with a balance of 0
+            # If the user ID is not in the database,c reate a new account with a balance of 0
             cursor.execute("INSERT INTO accounts (user_id, balance) VALUES (%s, 0)", (user_id,))
             db.commit()
             balance = 0
