@@ -34,7 +34,7 @@ def password(msg):
   symbols = msg
   try:
     if int(symbols)>10:
-      return 'В пароле должно быть до 10 символов!'
+      return 'The password can have a maximum of 10 characters'
     else:
       password = []
       for symbol in range(int(symbols)):
@@ -57,7 +57,7 @@ def password(msg):
           send = send.replace(' ','')
       return f"||{send}||"
   except:
-    return 'Неверно введено количество символов!'
+    return 'Error, not a number'
     
 def math(msg):
   math = msg

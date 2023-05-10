@@ -12,7 +12,7 @@ class Economy:
         db = mysql.connector.connect(
             host="db-mysql-lon1-35653-do-user-13900096-0.b.db.ondigitalocean.com",
             user="doadmin",
-            password="AVNS_tmxkB8EbAEfUxYdyANX",
+            password=password_temp_1,
             database="defaultdb",
             port=25060,
         )
@@ -40,7 +40,7 @@ class Economy:
         db = mysql.connector.connect(
             host="db-mysql-lon1-35653-do-user-13900096-0.b.db.ondigitalocean.com",
             user="doadmin",
-            password="AVNS_tmxkB8EbAEfUxYdyANX",
+            password=password_temp_1,
             database="defaultdb",
             port=25060,
         )
@@ -59,7 +59,7 @@ class Economy:
         db = mysql.connector.connect(
             host="db-mysql-lon1-35653-do-user-13900096-0.b.db.ondigitalocean.com",
             user="doadmin",
-            password="AVNS_tmxkB8EbAEfUxYdyANX",
+            password=password_temp_1,
             database="defaultdb",
             port=25060,
         )
@@ -79,7 +79,7 @@ class Economy:
         db = mysql.connector.connect(
             host="db-mysql-lon1-35653-do-user-13900096-0.b.db.ondigitalocean.com",
             user="doadmin",
-            password="AVNS_tmxkB8EbAEfUxYdyANX",
+            password=password_temp_1,
             database="defaultdb",
             port=25060,
         )
@@ -92,7 +92,7 @@ class Economy:
         db = mysql.connector.connect(
             host="db-mysql-lon1-35653-do-user-13900096-0.b.db.ondigitalocean.com",
             user="doadmin",
-            password="AVNS_tmxkB8EbAEfUxYdyANX",
+            password=password_temp_1,
             database="defaultdb",
             port=25060,
         )
@@ -105,7 +105,7 @@ class Economy:
         db = mysql.connector.connect(
             host="db-mysql-lon1-35653-do-user-13900096-0.b.db.ondigitalocean.com",
             user="doadmin",
-            password="AVNS_tmxkB8EbAEfUxYdyANX",
+            password=password_temp_1,
             database="defaultdb",
             port=25060,
         )
@@ -118,4 +118,49 @@ class Economy:
             return []
 
         return [pet[0] for pet in result]
-        
+    
+    def query_pay(self, key):
+        db = mysql.connector.connect(
+            host="db-mysql-lon1-35653-do-user-13900096-0.b.db.ondigitalocean.com",
+            user="doadmin",
+            password=password_temp_1,
+            database="defaultdb",
+            port=25060,
+        )
+        cursor = db.cursor()
+        cursor.execute("SELECT value FROM pay WHERE id = %s", (key,))
+        result = cursor.fetchone()
+        cursor.close()
+
+        if result is None:
+            return None
+
+        return str(result[0])
+
+
+    def add_pay(self, key, value):
+        db = mysql.connector.connect(
+            host="db-mysql-lon1-35653-do-user-13900096-0.b.db.ondigitalocean.com",
+            user="doadmin",
+            password=password_temp_1,
+            database="defaultdb",
+            port=25060,
+        )
+        cursor = db.cursor()
+        cursor.execute("INSERT INTO pay (id, value) VALUES (%s, %s) ON DUPLICATE KEY UPDATE value = VALUES(value)", (key, str(value)))
+        db.commit()
+        cursor.close()
+
+
+    def delete_pay(self, key):
+        db = mysql.connector.connect(
+            host="db-mysql-lon1-35653-do-user-13900096-0.b.db.ondigitalocean.com",
+            user="doadmin",
+            password=password_temp_1,
+            database="defaultdb",
+            port=25060,
+        )
+        cursor = db.cursor()
+        cursor.execute("DELETE FROM pay WHERE id = %s", (key,))
+        db.commit()
+        cursor.close()
