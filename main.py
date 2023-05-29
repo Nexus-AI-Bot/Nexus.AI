@@ -668,7 +668,7 @@ async def self(interaction: discord.Interaction):
   await interaction.response.send_message("Server invite link: https://discord.gg/RwWaA3QxVw \nBot invite link: https://nexus-ai.xyz")
 
 
-@tree.command(name="convert", description="Convert units! Supports ")
+@tree.command(name="convert", description="Convert units!")
 async def self(interaction: discord.Interaction, number: int, from_unit: str, to_unit: str):
   answer = f.convert_SI(number, from_unit, to_unit)
   if answer == "among":
@@ -677,7 +677,7 @@ async def self(interaction: discord.Interaction, number: int, from_unit: str, to
     await interaction.response.send_message(f"Converted {number} from {from_unit} to {to_unit}. Answer is {answer}")
 
 
-@tree.command(name="roast", description="Convert units! Supports ")
+@tree.command(name="roast", description="Roast someone")
 async def self(interaction: discord.Interaction, member: discord.Member):
   with open("data/roast.json") as r:
     roasts = json.load(r)
