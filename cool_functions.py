@@ -208,3 +208,13 @@ def get_server_settings(server_id, command, user_id):
   }
   e = requests.post(url="https://HelperAI-redirect-web.fluffik.repl.co/checkstatus", json=data)
   return "sucsess"
+
+
+def convert_SI(val, unit_in, unit_out):
+    try:
+      SI = {'mm':0.001, 'cm':0.01, 'm':1.0, 'km':1000.}
+      return val*SI[unit_in]/SI[unit_out]
+    except:
+      return "among"
+
+

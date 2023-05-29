@@ -10,6 +10,7 @@ import datetime
 import urllib
 import io as iio
 from discord.ui import Select, View
+import json
 import ffmpeg
 import discord.opus
 import random
@@ -67,6 +68,16 @@ openai.organization = "org-zuDrmFX8G3H6TsAwxsZZ8PLA"
 openai.api_key = temp['api_key']
 openai.Model.list()
 
+def get_results(query):
+    url = 'https://api.duckduckgo.com'
+    params = {
+        'q': query,
+        'format': 'json'
+    }
+
+    response = requests.get(url, params=params)
+    data = response.json()
+    return data['RelatedTopics']
 
 
 aiquestionstate = True
@@ -95,12 +106,7 @@ bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 # Create an instance of the Economy class
 economy = Economy(bot)
 
-# Get the balance for user with ID 123456
-user_id = 123456789
-balance = economy.query(user_id)
-
 # Print the balance
-print(f"The balance for user {user_id} is {balance} coins.")
 
 def buy(user_id, item):
   balance = economy.query(user_id)  # get the user's balance from the database
@@ -640,26 +646,46 @@ async def self(interaction: discord.Interaction, user: discord.User, message: st
 async def self(interaction: discord.Interaction):
   await interaction.response.send_message(embed=await pyrandmeme())
 
-@tree.command(name="cat", description="Check if the given image is a cat")
-async def self(interaction: discord.Interaction, image: discord.Attachment):
-  send_image = await image.read()
-  await interaction.response.send_message(f.discord_cat_finder(iio.BytesIO(send_image)))
+#@tree.command(name="cat", description="Check if the given image is a cat")
+#async def self(interaction: discord.Interaction, image: discord.Attachment):
+  #send_image = await image.read()
+  #await interaction.response.send_message(f.discord_cat_finder(iio.BytesIO(send_image)))
 
-@tree.command(name="oauth-test", description="Test the OAuth server. For dev use only.")
-async def self(interaction: discord.Interaction):
-  server_id = interaction.guild_id
-  command = "oauth-test"
-  user_id = interaction.user.id
-  settings = f.get_server_settings(server_id, command, user_id)
-  await interaction.response.send_message(f"recieved{settings}")
+@tree.command(name="search", description="Google something")
+async def self(interaction: discord.Interaction, query: str):
+    embed = discord.Embed(title="Your search results", description="First 5 shown", colour=discord.Colour.random())
+    results = get_results(query)
+    try:
+      for i, result in enumerate(results[:5]):
+        if 'Text' in result and 'FirstURL' in result:
+            embed.add_field(name=f"Result {i+1}", value=f"{i+1}. {result['Text']} - {result['FirstURL']}", inline=False)
+      await interaction.response.send_message(embed=embed)
+    except:
+      await interaction.response.send_message(f"We scraped the internet far and wide but couldn't find anything for {query}. :(")
 
-@tree.command(name="welcome", description="Send a welcome image.")
+@tree.command(name="invite", description="Invite the bot")
 async def self(interaction: discord.Interaction):
-  await interaction.response.defer()
-  await interaction.followup.send(file=imggen.main.Generate.welcome())
+  await interaction.response.send_message("Server invite link: https://discord.gg/RwWaA3QxVw \nBot invite link: https://www.nexus-ai.xyz")
+
+
+@tree.command(name="convert", description="Convert units! Supports ")
+async def self(interaction: discord.Interaction, number: int, from_unit: str, to_unit: str):
+  answer = f.convert_SI(number, from_unit, to_unit)
+  if answer == "among":
+    await interaction.response.send_message("Valid conversions are mm, cm, m,")
+  else:
+    await interaction.response.send_message(f"Converted {number} from {from_unit} to {to_unit}. Answer is {answer}")
+
+
+@tree.command(name="roast", description="Convert units! Supports ")
+async def self(interaction: discord.Interaction, member: discord.Member):
+  with open("data/roast.json") as r:
+    roasts = json.load(r)
+  name = member.name
+  random_roast = random.choice(roasts["roasts"])
+  roast = f"{name}, {random_roast['roast']}"
+  await interaction.response.send_message(roast)
 
 
 bot.run(token)
-
-
 
