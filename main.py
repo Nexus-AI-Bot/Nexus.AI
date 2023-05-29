@@ -665,7 +665,7 @@ async def self(interaction: discord.Interaction, query: str):
 
 @tree.command(name="invite", description="Invite the bot")
 async def self(interaction: discord.Interaction):
-  await interaction.response.send_message("Server invite link: https://discord.gg/RwWaA3QxVw \nBot invite link: https://www.nexus-ai.xyz")
+  await interaction.response.send_message("Server invite link: https://discord.gg/RwWaA3QxVw \nBot invite link: https://nexus-ai.xyz")
 
 
 @tree.command(name="convert", description="Convert units! Supports ")
