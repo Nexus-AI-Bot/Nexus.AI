@@ -1,5 +1,7 @@
 print("Hello world")
 print("yep its runnin")
+global pet
+global user_id_sell
 import discord
 import os
 import time
@@ -13,7 +15,10 @@ from discord.ui import Select, View
 import json
 import ffmpeg
 import discord.opus
+from discord import ui
 import random
+from datetime import datetime
+import pytz
 from io import BytesIO
 from pyowm import OWM
 from googletrans import Translator
@@ -21,6 +26,7 @@ import smtplib
 from pyrandmeme import *
 from PIL import Image, ImageOps
 from email.mime.text import MIMEText
+import typing
 from random import choice as ch
 from pyowm.utils.config import get_default_config
 import cool_functions as f
@@ -111,23 +117,41 @@ economy = Economy(bot)
 def buy(user_id, item):
   balance = economy.query(user_id)  # get the user's balance from the database
   if item.lower() == "cat":
-    if balance < 50:
+    if balance < 150:
       return "You do not have enough coins to buy a cat!"
     economy.add_pet(user_id, "cat")  # add a cat pet to the user's account in the database
-    economy.delete(user_id, 50)  # subtract 50 coins from the user's balance in the database
+    economy.delete(user_id, 150)  # subtract 50 coins from the user's balance in the database
     return "You bought a cat!"
   elif item.lower() == "dog":
-    if balance < 45:
+    if balance < 100:
       return "You do not have enough coins to buy a Dog!"
     economy.add_pet(user_id, "dog")  # add a cat pet to the user's account in the database
-    economy.delete(user_id, 45)  # subtract 50 coins from the user's balance in the database
+    economy.delete(user_id, 100)  # subtract 50 coins from the user's balance in the database
     return "You bought a Dog!"
   elif item.lower() == "parrot":
-    if balance < 15:
+    if balance < 80:
       return "You do not have enough coins to buy a Parrot!"
     economy.add_pet(user_id, "parrot")  # add a cat pet to the user's account in the database
-    economy.delete(user_id, 15)  # subtract 50 coins from the user's balance in the database
-    return "You bought a Dog!"
+    economy.delete(user_id, 80)  # subtract 50 coins from the user's balance in the database
+    return "You bought a Parrot!"
+  elif item.lower() == "gold fish":
+    if balance < 60:
+      return "You do not have enough coins to buy a Gold Fish!"
+    economy.add_pet(user_id, "gold fish")  # add a cat pet to the user's account in the database
+    economy.delete(user_id, 60)  # subtract 50 coins from the user's balance in the database
+    return "You bought a Gold Fish!"
+  elif item.lower() == "rabbit":
+    if balance < 50:
+      return "You do not have enough coins to buy a Rabbit!"
+    economy.add_pet(user_id, "rabbit")  # add a cat pet to the user's account in the database
+    economy.delete(user_id, 50)  # subtract 50 coins from the user's balance in the database
+    return "You bought a Rabbit!"
+  elif item.lower() == "hamster":
+    if balance < 20:
+      return "You do not have enough coins to buy a Hamster!"
+    economy.add_pet(user_id, "hamster")  # add a cat pet to the user's account in the database
+    economy.delete(user_id, 20)  # subtract 50 coins from the user's balance in the database
+    return "You bought a Hamster!"
   else:
     return f"{item} is not for sale in the shop."
   
@@ -192,9 +216,12 @@ class Pay(discord.ui.View):
 class ShopDropdown(discord.ui.Select):
   def __init__(self):
     options=[
-      discord.SelectOption(label='Cat', description='50 nexus'),
-      discord.SelectOption(label='Dog', description='45 nexus'),
-      discord.SelectOption(label='Parrot', description='15 nexus')
+      discord.SelectOption(label='Cat', description='150 nexus'),
+      discord.SelectOption(label='Dog', description='100 nexus'),
+      discord.SelectOption(label='Parrot', description='80 nexus'),
+      discord.SelectOption(label='Gold Fish', description='60 nexus'),
+      discord.SelectOption(label='Rabbit', description='50 nexus'),
+      discord.SelectOption(label='Hamster', description='20 nexus')
     ]
     super().__init__(placeholder="Choose a pet you want to buy!", options=options, min_values=1, max_values=1)
   async def callback(self, interaction: discord.Interaction):
@@ -266,6 +293,7 @@ class HelpConfigView(discord.ui.View):
     
 
 #
+
 @tree.command(name="ping", description="Pings the user")
 async def self(interaction: discord.Interaction):
   await interaction.response.send_message(f"Pong")
@@ -412,40 +440,16 @@ async def self(interaction: discord.Interaction, prompt: str):
   await interaction.followup.send(file=discord.File('dalle.png'))
   await os.remove('dalle.png')
 
-
-@tree.command(name="todo", description="Todo list")
-async def self(interaction: discord.Interaction, task: str):
-  global job
-  global user
-  job = task
-  user = interaction.user
-  str(user)
-  view = Menu()
-  await interaction.response.send_message(view=view, ephemeral=True)
-
-@tree.command(name="translate", description="Translation")
-async def self(interaction: discord.Interaction, text: str,dest_language: str):
-  translation = translator.translate(text, dest=dest_language)
-  await interaction.response.send_message(translation.text)
-
-@tree.command(name="embed", description="Test embed")
-async def self(interaction: discord.Interaction, member: discord.User):
-  name = member.display_name
-  pfp = member.display_avatar
-  embed = discord.Embed(title="test embed!", description="this is a test description", colour=discord.Colour.random())
-  embed.set_author(name=f"{name}", url="https://cdn.discordapp.com/emojis/1084268640649609336.webp?size=48&quality=lossless")
-  embed.set_thumbnail(url=f"{pfp}")
-  embed.add_field(name="This is a field 1", value="This is a value")
-  embed.add_field(name="This is a field 2", value="This is a value", inline=True)
-  embed.add_field(name="This is a field 3", value="This is a value", inline=False)
-  embed.set_footer(text=f"{name} made this!")
-  await interaction.response.send_message(embed=embed)
+#@tree.command(name="translate", description="Translation")
+#async def self(interaction: discord.Interaction, text: str,dest_language: str):
+  #translation = translator.translate(text, dest=dest_language)
+  #await interaction.response.send_message(translation.text)
 
 @tree.command(name="grey", description="grey image")
 async def self(interaction: discord.Interaction,image: discord.Attachment):
+  await interaction.response.defer()
   img = await image.read()
   img2 = iio.BytesIO(img)
-  await interaction.response.defer()
   image_content = io.imread(img2) 
   image_grey = color.rgb2gray(image_content)
   io.imsave('grey.png', image_grey)
@@ -477,21 +481,22 @@ async def self(interaction: discord.Interaction):
 
 @tree.command(name="gamble", description="Gamble for money!")
 async def self(interaction: discord.Interaction, amount: int):
-  await interaction.response.defer()
-  user_id = str(interaction.user.id)
-  balance = economy.query(user_id)  # get the user's balance from the database
-  if amount > balance:
-    await interaction.followup.send('You do not have enough coins to gamble that much!')
+    await interaction.response.defer()  # defer the response before processing
+    user_id = str(interaction.user.id)
+    balance = economy.query(user_id)  # get the user's balance from the database
 
-    outcomes = ['win', 'lose']
-    outcome = random.choice(outcomes)
-
-    if outcome == 'win':
-        economy.add(user_id, amount)  # add the winnings to the user's balance in the database
-        await interaction.followup.send(f"You won {amount} coins!")
+    if amount > balance:
+        await interaction.followup.send('You do not have enough coins to gamble that much!')
     else:
-        economy.delete(user_id, amount)  # subtract the loss from the user's balance in the database
-        await interaction.followup.send(f"You lost {amount} coins!")
+        outcomes = ['win', 'lose']
+        outcome = random.choice(outcomes)
+
+        if outcome == 'win':
+            economy.add(user_id, amount)  # add the winnings to the user's balance in the database
+            await interaction.followup.send(f"You won {amount} coins!")
+        else:
+            economy.delete(user_id, amount)  # subtract the loss from the user's balance in the database
+            await interaction.followup.send(f"You lost {amount} coins!")
 
 
 @tree.command(name="work", description="Work for money!")
@@ -505,12 +510,13 @@ async def self(interaction: discord.Interaction):
 @tree.command(name="shop", description="Check out the shop!")
 async def self(interaction: discord.Interaction):
   embed = discord.Embed(title='Shop', color=0x00ff00)
-  embed.add_field(name='Cat', value='Cost: 50 helpers')
-  await interaction.response.send_message(embed=embed)
-
-@tree.command(name="buy", description="Buy a pet!")
-async def self(interaction: discord.Interaction):
-  await interaction.response.send_message("Choose your pet!", view=ShopView())
+  embed.add_field(name='Cat', value='Cost: 150 nexus')
+  embed.add_field(name='Dog', value='Cost: 100 nexus')
+  embed.add_field(name='Parrot', value='Cost: 80 nexus')
+  embed.add_field(name='Gold Fish', value='Cost: 60 nexus')
+  embed.add_field(name='Rabbit', value='Cost: 50 nexus')
+  embed.add_field(name='Hamster', value='Cost: 20 nexus')
+  await interaction.response.send_message(embed=embed, view=ShopView())
 
 
 @tree.command(name="test", description="Tic tac toe game!")
@@ -655,12 +661,12 @@ async def self(interaction: discord.Interaction):
 async def self(interaction: discord.Interaction, query: str):
     embed = discord.Embed(title="Your search results", description="First 5 shown", colour=discord.Colour.random())
     results = get_results(query)
-    try:
+    if len(results) == 0:
       for i, result in enumerate(results[:5]):
         if 'Text' in result and 'FirstURL' in result:
             embed.add_field(name=f"Result {i+1}", value=f"{i+1}. {result['Text']} - {result['FirstURL']}", inline=False)
       await interaction.response.send_message(embed=embed)
-    except:
+    else:
       await interaction.response.send_message(f"We scraped the internet far and wide but couldn't find anything for {query}. :(")
 
 @tree.command(name="invite", description="Invite the bot")
@@ -677,7 +683,7 @@ async def self(interaction: discord.Interaction, number: int, from_unit: str, to
     await interaction.response.send_message(f"Converted {number} from {from_unit} to {to_unit}. Answer is {answer}")
 
 
-@tree.command(name="roast", description="Roast someone")
+@tree.command(name='roast', description='Roast someone')
 async def self(interaction: discord.Interaction, member: discord.Member):
   with open("data/roast.json") as r:
     roasts = json.load(r)
@@ -685,6 +691,49 @@ async def self(interaction: discord.Interaction, member: discord.Member):
   random_roast = random.choice(roasts["roasts"])
   roast = f"{name}, {random_roast['roast']}"
   await interaction.response.send_message(roast)
+
+
+async def drink_autocompletion(interaction: discord.Interaction, current: str) -> typing.List[app_commands.Choice[str]]:
+  data = []
+  for pet in ['cat', 'dog', 'parrot', 'gold fish', 'rabbit', 'hamster']:
+    if current.lower() in pet.lower():
+      data.append(app_commands.Choice(name=pet, value=pet))
+  return data 
+
+@tree.command(name="autocomplete", description="test")
+@app_commands.autocomplete(pet=drink_autocompletion)
+async def drink(interaction: discord.Interaction, pet: str):
+  user_id_sell = interaction.user.id
+  user_pets = economy.check_user_pet(user_id_sell)
+  if user_pets.count(pet) == 1:
+    if pet == 'cat':
+      economy.add(user_id_sell, 150)
+      economy.delete_pet(user_id_sell, pet)
+      await interaction.response.send_message(f'Your Cat has been sold', ephemeral=True)
+    elif pet == 'dog':
+      economy.add(user_id_sell, 100)
+      economy.delete_pet(user_id_sell, pet)
+      await interaction.response.send_message(f'Your Dog has been sold', ephemeral=True)
+    elif pet == 'parrot':
+      economy.add(user_id_sell, 80)
+      economy.delete_pet(user_id_sell, pet)
+      await interaction.response.send_message(f'Your Parrot has been sold', ephemeral=True)
+    elif pet == 'gold fish':
+      economy.add(user_id_sell, 60)
+      economy.delete_pet(user_id_sell, pet)
+      await interaction.response.send_message(f'Your Gold Fish has been sold', ephemeral=True)
+    elif pet == 'rabbit':
+      economy.add(user_id_sell, 50)
+      economy.delete_pet(user_id_sell, pet)
+      await interaction.response.send_message(f'Your Gold Fish has been sold', ephemeral=True)
+    elif pet == 'hamster':
+      economy.add(user_id_sell, 50)
+      economy.delete_pet(user_id_sell, pet)
+      await interaction.response.send_message(f'Your Gold Fish has been sold', ephemeral=True)
+    else:
+      await interaction.response.send_message(content='Either you do not have that type of pet or this pet does not exist')
+      return
+
 
 
 bot.run(token)

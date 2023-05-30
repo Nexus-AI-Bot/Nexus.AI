@@ -12,6 +12,7 @@ db = print()
 import numpy as np
 from PIL import Image
 math_operations = ["*", "/", "+", "-"]
+import ast
 import json
 func = ["add", "remove", "list"]
 import smtplib
@@ -60,12 +61,14 @@ def password(msg):
     return 'Error, not a number'
     
 def math(msg):
-  math = msg
-  try:
-    solution = eval(math)
-    return solution
-  except:
-    return "Пример написан неправильно!"
+    math = msg
+    try:
+        tree = ast.parse(math, mode='eval')
+        solution = ast.literal_eval(tree.body)
+        return solution
+    except Exception:
+        return "You wrote that wrong:("
+
 def math_ran():
   random_number = random.randint(1, 4)
   x = random.randint(1, 100)
