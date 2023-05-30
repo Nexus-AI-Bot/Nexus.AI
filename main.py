@@ -700,7 +700,7 @@ async def drink_autocompletion(interaction: discord.Interaction, current: str) -
       data.append(app_commands.Choice(name=pet, value=pet))
   return data 
 
-@tree.command(name="autocomplete", description="test")
+@tree.command(name="sell", description="Sell your pet!")
 @app_commands.autocomplete(pet=drink_autocompletion)
 async def drink(interaction: discord.Interaction, pet: str):
   user_id_sell = interaction.user.id
@@ -725,11 +725,11 @@ async def drink(interaction: discord.Interaction, pet: str):
     elif pet == 'rabbit':
       economy.add(user_id_sell, 50)
       economy.delete_pet(user_id_sell, pet)
-      await interaction.response.send_message(f'Your Gold Fish has been sold', ephemeral=True)
+      await interaction.response.send_message(f'Your Rabbit has been sold', ephemeral=True)
     elif pet == 'hamster':
       economy.add(user_id_sell, 50)
       economy.delete_pet(user_id_sell, pet)
-      await interaction.response.send_message(f'Your Gold Fish has been sold', ephemeral=True)
+      await interaction.response.send_message(f'Your Hamster has been sold', ephemeral=True)
     else:
       await interaction.response.send_message(content='Either you do not have that type of pet or this pet does not exist')
       return
