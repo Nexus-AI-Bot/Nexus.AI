@@ -6,3 +6,4 @@ Credit:
 Fluffik
 My friend 
 YAGPDB (www.yagpdb.xyz)
+## [Discord!](https://discord.gg/ZH8tjeGh)
