@@ -338,8 +338,8 @@ async def self(interaction: discord.Interaction, question: str):
   try:
     e = economy.query_pay(user_full_id)
     f = e.split(',')
-    if 'askai' in f and 'paid' in f:
-      if f.index('askai') + 1 == f.index('paid'):
+    if 'aiplan' in f and 'paid' in f:
+      if f.index('aiplan') + 1 == f.index('paid'):
         system_msg = 'You are Chat GPT 4'
         user_msg = question 
         response = openai.ChatCompletion.create(
@@ -351,7 +351,7 @@ async def self(interaction: discord.Interaction, question: str):
         )
 
         response_from_gpt = response["choices"][0]["message"]["content"]
-        if len(response_from_gpt) < 100:
+        if len(response_from_gpt) < 2000:
           await interaction.followup.send(response_from_gpt)
         else:
           await interaction.followup.send("The response ChatGPT provided is too long. Try asking for something smaller or contact support by opening a ticket in the official server (https://discord.gg/RwWaA3QxVw).")
@@ -360,7 +360,7 @@ async def self(interaction: discord.Interaction, question: str):
     embedpay = discord.Embed(title="You are accessing a paid feature", colour=discord.Colour.random())
     embedpay.add_field(name="Consider upgrading to the AI Plan", value="Click the button below!", inline=False)
     await interaction.followup.send(embed=embedpay, view=view)
-    economy.add_pay(user_full_id, 'askai,notpaid')
+    economy.add_pay(user_full_id, 'aiplan,notpaid')
 
 
 @tree.command(name="randommath", description="Get a random math question!")
@@ -401,44 +401,57 @@ async def self(interaction: discord.Interaction):
 @tree.command(name="imagine", description="ai")
 async def self(interaction: discord.Interaction, prompt: str):
   await interaction.response.defer()
-  num_image=1
-  SIZES = ('1024x1024', '512x512', '256x256')
-  size='512x512'
-  output_format='url'
-  """
-  params: 
-      prompt (str):
-      num_image (int):
-      size (str):
-      output_format (str):
-  """
+  user_discrim = interaction.user.discriminator
+  user_username = interaction.user.name
+  user_full_id = f"{user_username}#{user_discrim}"
   try:
-    images = []
-    response = openai.Image.create(
-      prompt=prompt,
-      n=num_image,
-      size=size,
-      response_format=output_format
-    )
-    print(response)
-    if output_format == 'url':
-      for image in response['data']:
-        images.append(image.url)
-    elif output_format == 'b64_json':
-      for image in response['data']:
-        images.append(image.b64_json)
+    e = economy.query_pay(user_full_id)
+    f = e.split(',')
+    if 'aiplan' in f and 'paid' in f:
+      if f.index('aiplan') + 1 == f.index('paid'):
+        num_image=1
+        SIZES = ('1024x1024', '512x512', '256x256')
+        size='512x512'
+        output_format='url'
+        """
+        params: 
+            prompt (str):
+            num_image (int):
+            size (str):
+            output_format (str):
+        """
+        try:
+          images = []
+          response = openai.Image.create(
+            prompt=prompt,
+            n=num_image,
+            size=size,
+            response_format=output_format
+          )
+          print(response)
+          if output_format == 'url':
+            for image in response['data']:
+              images.append(image.url)
+          elif output_format == 'b64_json':
+            for image in response['data']:
+              images.append(image.b64_json)
+        except:
+          print('didnt work lol')
+        openai.api_key = temp['api_key']
+        e = {'images': images}
+        images = e['images']
+        images[0]
+        for image in images:
+            print('Image Generated')
+        urllib.request.urlretrieve(image, "dalle.png")
+        await interaction.followup.send(file=discord.File('dalle.png'))
+        await os.remove('dalle.png')
   except:
-    print('didnt work lol')
-  openai.api_key = temp['api_key']
-  e = {'created': datetime.datetime.fromtimestamp(response['created']), 'images': images}
-  e['created']
-  images = e['images']
-  images[0]
-  for image in images:
-      print('Image Generated')
-  urllib.request.urlretrieve(image, "dalle.png")
-  await interaction.followup.send(file=discord.File('dalle.png'))
-  await os.remove('dalle.png')
+    view = Pay()
+    embedpay = discord.Embed(title="You are accessing a paid feature", colour=discord.Colour.random())
+    embedpay.add_field(name="Consider upgrading to the AI Plan", value="Click the button below!", inline=False)
+    await interaction.followup.send(embed=embedpay, view=view)
+    economy.add_pay(user_full_id, 'aiplan,notpaid')
 
 #@tree.command(name="translate", description="Translation")
 #async def self(interaction: discord.Interaction, text: str,dest_language: str):
