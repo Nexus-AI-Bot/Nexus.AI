@@ -1,4 +1,4 @@
- # Development Bot
+ # Nexus.AI
 
 This repository contains the development code for a bot that is currently in progress. The idea for this bot originated from a Hackathon. Our ultimate objective is to create a bot similar to YAGPDB.
 
