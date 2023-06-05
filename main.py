@@ -709,13 +709,13 @@ async def self(interaction: discord.Interaction, member: discord.Member):
   roast = f"{name}, {random_roast['roast']}"
   await interaction.response.send_message(roast)
 
-
 async def drink_autocompletion(interaction: discord.Interaction, current: str) -> typing.List[app_commands.Choice[str]]:
   data = []
   for pet in ['cat', 'dog', 'parrot', 'gold fish', 'rabbit', 'hamster']:
     if current.lower() in pet.lower():
       data.append(app_commands.Choice(name=pet, value=pet))
   return data 
+
 @logger.log
 @tree.command(name="sell", description="Sell your pet!")
 @app_commands.autocomplete(pet=drink_autocompletion)
@@ -750,6 +750,10 @@ async def drink(interaction: discord.Interaction, pet: str):
     else:
       await interaction.response.send_message(content='Either you do not have that type of pet or this pet does not exist')
       return
+
+
+
+
 
 
 
