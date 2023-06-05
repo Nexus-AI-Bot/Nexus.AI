@@ -25,6 +25,7 @@ from pyowm import OWM
 from googletrans import Translator
 import smtplib
 from pyrandmeme import *
+import logger
 from PIL import Image, ImageOps
 from email.mime.text import MIMEText
 import typing
@@ -296,19 +297,22 @@ class HelpConfigView(discord.ui.View):
     
 
 #
-
+@logger.log
 @tree.command(name="ping", description="Pings the user")
 async def self(interaction: discord.Interaction):
   await interaction.response.send_message(f"Pong")
 
+@logger.log
 @tree.command(name="hi", description="introduction")
 async def self(interaction: discord.Interaction):
   await interaction.response.send_message(f"Hello {interaction.user}! I'm an artificial intelligence. I'm not perfect yet, so I don't want to write me anything. To find #out what you can write the help command.")
 
+@logger.log
 @tree.command(name="help", description="bot commands list")
 async def self(interaction: discord.Interaction):
   await interaction.response.send_message("Help!", view=HelpConfigView())
 
+@logger.log
 @tree.command(name="weather", description="Send where is the weather")
 async def self(interaction: discord.Interaction, city: str):
   embed = discord.Embed(title="Weather", description=f"This is a weather in {city}", colour=discord.Colour.random())
@@ -331,7 +335,7 @@ async def self(interaction: discord.Interaction, city: str):
     await interaction.response.send_message(embed=embed, ephemeral=True)
   except:
     await interaction.response.send_message('Incorrect city!', ephemeral=True)
-
+@logger.log
 @tree.command(name="askai", description="Ask AI something!")
 async def self(interaction: discord.Interaction, question: str):
   await interaction.response.defer()
@@ -341,8 +345,8 @@ async def self(interaction: discord.Interaction, question: str):
   try:
     e = economy.query_pay(user_full_id)
     f = e.split(',')
-    if 'askai' in f and 'paid' in f:
-      if f.index('askai') + 1 == f.index('paid'):
+    if 'aiplan' in f and 'paid' in f:
+      if f.index('aiplan') + 1 == f.index('paid'):
         system_msg = 'You are Chat GPT 4'
         user_msg = question 
         response = openai.ChatCompletion.create(
@@ -354,7 +358,7 @@ async def self(interaction: discord.Interaction, question: str):
         )
 
         response_from_gpt = response["choices"][0]["message"]["content"]
-        if len(response_from_gpt) < 100:
+        if len(response_from_gpt) < 2000:
           await interaction.followup.send(response_from_gpt)
         else:
           await interaction.followup.send("The response ChatGPT provided is too long. Try asking for something smaller or contact support by opening a ticket in the official server (https://discord.gg/RwWaA3QxVw).")
@@ -363,25 +367,25 @@ async def self(interaction: discord.Interaction, question: str):
     embedpay = discord.Embed(title="You are accessing a paid feature", colour=discord.Colour.random())
     embedpay.add_field(name="Consider upgrading to the AI Plan", value="Click the button below!", inline=False)
     await interaction.followup.send(embed=embedpay, view=view)
-    economy.add_pay(user_full_id, 'askai,notpaid')
+    economy.add_pay(user_full_id, 'aiplan,notpaid')
 
-
+@logger.log
 @tree.command(name="randommath", description="Get a random math question!")
 async def self(interaction: discord.Interaction):
   await interaction.response.send_message(f.math_ran())
-
+@logger.log
 @tree.command(name="funfact", description="Random funfacts!")
 async def self(interaction: discord.Interaction):
   await interaction.response.send_message(f.funfact())
-
+@logger.log
 @tree.command(name="calculate", description="Calculator in discord!")
 async def self(interaction: discord.Interaction, math_problem: str):
   await interaction.response.send_message(f.math(math_problem))
-
+@logger.log
 @tree.command(name="password", description="Get a random password!")
 async def self(interaction: discord.Interaction, symbols_quantity: str):
   await interaction.response.send_message(f.password(symbols_quantity))
-
+@logger.log
 @tree.command(name="email", description="Send an email")
 async def self(interaction: discord.Interaction, subject: str, body: str, recipient: str):
   await interaction.response.defer()
@@ -396,58 +400,71 @@ async def self(interaction: discord.Interaction, subject: str, body: str, recipi
   smtp_server.sendmail(sender, recipients, msg.as_string())
   smtp_server.quit()
   await interaction.followup.send("Sent!", ephemeral=True)
-
+@logger.log
 @tree.command(name="emoji", description="Random emoji!")
 async def self(interaction: discord.Interaction):
   await interaction.response.send_message(ch(emoji))
-
+@logger.log
 @tree.command(name="imagine", description="ai")
 async def self(interaction: discord.Interaction, prompt: str):
   await interaction.response.defer()
-  num_image=1
-  SIZES = ('1024x1024', '512x512', '256x256')
-  size='512x512'
-  output_format='url'
-  """
-  params: 
-      prompt (str):
-      num_image (int):
-      size (str):
-      output_format (str):
-  """
+  user_discrim = interaction.user.discriminator
+  user_username = interaction.user.name
+  user_full_id = f"{user_username}#{user_discrim}"
   try:
-    images = []
-    response = openai.Image.create(
-      prompt=prompt,
-      n=num_image,
-      size=size,
-      response_format=output_format
-    )
-    print(response)
-    if output_format == 'url':
-      for image in response['data']:
-        images.append(image.url)
-    elif output_format == 'b64_json':
-      for image in response['data']:
-        images.append(image.b64_json)
+    e = economy.query_pay(user_full_id)
+    f = e.split(',')
+    if 'aiplan' in f and 'paid' in f:
+      if f.index('aiplan') + 1 == f.index('paid'):
+        num_image=1
+        SIZES = ('1024x1024', '512x512', '256x256')
+        size='512x512'
+        output_format='url'
+        """
+        params: 
+            prompt (str):
+            num_image (int):
+            size (str):
+            output_format (str):
+        """
+        try:
+          images = []
+          response = openai.Image.create(
+            prompt=prompt,
+            n=num_image,
+            size=size,
+            response_format=output_format
+          )
+          print(response)
+          if output_format == 'url':
+            for image in response['data']:
+              images.append(image.url)
+          elif output_format == 'b64_json':
+            for image in response['data']:
+              images.append(image.b64_json)
+        except:
+          print('didnt work lol')
+        openai.api_key = temp['api_key']
+        e = {'images': images}
+        images = e['images']
+        images[0]
+        for image in images:
+            print('Image Generated')
+        urllib.request.urlretrieve(image, "dalle.png")
+        await interaction.followup.send(file=discord.File('dalle.png'))
+        await os.remove('dalle.png')
   except:
-    print('didnt work lol')
-  openai.api_key = temp['api_key']
-  e = {'created': datetime.datetime.fromtimestamp(response['created']), 'images': images}
-  e['created']
-  images = e['images']
-  images[0]
-  for image in images:
-      print('Image Generated')
-  urllib.request.urlretrieve(image, "dalle.png")
-  await interaction.followup.send(file=discord.File('dalle.png'))
-  await os.remove('dalle.png')
+    view = Pay()
+    embedpay = discord.Embed(title="You are accessing a paid feature", colour=discord.Colour.random())
+    embedpay.add_field(name="Consider upgrading to the AI Plan", value="Click the button below!", inline=False)
+    await interaction.followup.send(embed=embedpay, view=view)
+    economy.add_pay(user_full_id, 'aiplan,notpaid')
 
 #@tree.command(name="translate", description="Translation")
 #async def self(interaction: discord.Interaction, text: str,dest_language: str):
   #translation = translator.translate(text, dest=dest_language)
   #await interaction.response.send_message(translation.text)
-
+@logger.log
 @tree.command(name="grey", description="grey image")
 async def self(interaction: discord.Interaction,image: discord.Attachment):
   await interaction.response.defer()
@@ -457,7 +474,7 @@ async def self(interaction: discord.Interaction,image: discord.Attachment):
   image_grey = color.rgb2gray(image_content)
   io.imsave('grey.png', image_grey)
   await interaction.followup.send(file=discord.File('grey.png'))
-
+@logger.log
 @tree.command(name="rockpaperscissors", description="Rock, paper, scissors")
 async def self(interaction: discord.Interaction):
   name = interaction.user
@@ -468,7 +485,7 @@ async def self(interaction: discord.Interaction):
   embed.set_footer(text=f"{name} started the game")
   view = Game()
   await interaction.response.send_message(view=view, ephemeral=True, embed=embed)
-
+@logger.log
 @tree.command(name="balance", description="Check your balance")
 async def self(interaction: discord.Interaction):
   await interaction.response.defer()
@@ -481,7 +498,7 @@ async def self(interaction: discord.Interaction):
     pet_message = "You don't have any pets yet."
 
   await interaction.followup.send(f"Your balance is {balance} coins. {pet_message}")
-
+@logger.log
 @tree.command(name="gamble", description="Gamble for money!")
 async def self(interaction: discord.Interaction, amount: int):
     await interaction.response.defer()  # defer the response before processing
@@ -501,7 +518,7 @@ async def self(interaction: discord.Interaction, amount: int):
             economy.delete(user_id, amount)  # subtract the loss from the user's balance in the database
             await interaction.followup.send(f"You lost {amount} coins!")
 
-
+@logger.log
 @tree.command(name="work", description="Work for money!")
 async def self(interaction: discord.Interaction):
   await interaction.response.defer()
@@ -509,7 +526,7 @@ async def self(interaction: discord.Interaction):
   earnings = random.randint(1, 10)
   economy.add(user_id, earnings)
   await interaction.followup.send(f'You earned {earnings} coins for your hard work!')
-
+@logger.log
 @tree.command(name="shop", description="Check out the shop!")
 async def self(interaction: discord.Interaction):
   embed = discord.Embed(title='Shop', color=0x00ff00)
@@ -521,7 +538,7 @@ async def self(interaction: discord.Interaction):
   embed.add_field(name='Hamster', value='Cost: 20 nexus')
   await interaction.response.send_message(embed=embed, view=ShopView())
 
-
+@logger.log
 @tree.command(name="test", description="Tic tac toe game!")
 async def self(interaction: discord.Interaction, place: str):
   global game
@@ -644,13 +661,13 @@ async def self(interaction: discord.Interaction, place: str):
     # add code to switch to the next player here
     
   await interaction.followup.send(file=discord.File('result.png'))
-
+@logger.log
 @tree.command(name='dm', description='Dm someone')
 async def self(interaction: discord.Interaction, user: discord.User, message: str):
   embed = discord.Embed(title=message, description='Sent using Helper.AI discord bot')
   await user.send(embed=embed)
   await interaction.response.send_message("Sent!", ephemeral=True)
-
+@logger.log
 @tree.command(name='meme', description='Get a random meme!')
 async def self(interaction: discord.Interaction):
   await interaction.response.send_message(embed=await pyrandmeme())
@@ -659,7 +676,7 @@ async def self(interaction: discord.Interaction):
 #async def self(interaction: discord.Interaction, image: discord.Attachment):
   #send_image = await image.read()
   #await interaction.response.send_message(f.discord_cat_finder(iio.BytesIO(send_image)))
-
+@logger.log
 @tree.command(name="search", description="Google something")
 async def self(interaction: discord.Interaction, query: str):
     embed = discord.Embed(title="Your search results", description="First 5 shown", colour=discord.Colour.random())
@@ -671,12 +688,12 @@ async def self(interaction: discord.Interaction, query: str):
       await interaction.response.send_message(embed=embed)
     else:
       await interaction.response.send_message(f"We scraped the internet far and wide but couldn't find anything for {query}. :(")
-
+@logger.log
 @tree.command(name="invite", description="Invite the bot")
 async def self(interaction: discord.Interaction):
   await interaction.response.send_message("Server invite link: https://discord.gg/RwWaA3QxVw \nBot invite link: https://nexus-ai.xyz")
 
-
+@logger.log
 @tree.command(name="convert", description="Convert units!")
 async def self(interaction: discord.Interaction, number: int, from_unit: str, to_unit: str):
   answer = f.convert_SI(number, from_unit, to_unit)
@@ -685,7 +702,7 @@ async def self(interaction: discord.Interaction, number: int, from_unit: str, to
   else:
     await interaction.response.send_message(f"Converted {number} from {from_unit} to {to_unit}. Answer is {answer}")
 
-
+@logger.log
 @tree.command(name='roast', description='Roast someone')
 async def self(interaction: discord.Interaction, member: discord.Member):
   with open("data/roast.json") as r:
@@ -695,7 +712,6 @@ async def self(interaction: discord.Interaction, member: discord.Member):
   roast = f"{name}, {random_roast['roast']}"
   await interaction.response.send_message(roast)
 
-
 async def drink_autocompletion(interaction: discord.Interaction, current: str) -> typing.List[app_commands.Choice[str]]:
   data = []
   for pet in ['cat', 'dog', 'parrot', 'gold fish', 'rabbit', 'hamster']:
@@ -703,6 +719,7 @@ async def drink_autocompletion(interaction: discord.Interaction, current: str) -
       data.append(app_commands.Choice(name=pet, value=pet))
   return data 
 
+@logger.log
 @tree.command(name="sell", description="Sell your pet!")
 @app_commands.autocomplete(pet=drink_autocompletion)
 async def drink(interaction: discord.Interaction, pet: str):
@@ -769,6 +786,10 @@ async def self(interaction: discord.Interaction,meal:str):
 
   else:
       await interaction.response.send_message("An error occurred while requesting the recipe. Please try again later.")
+
+
+
+
 
 
 
