@@ -5,6 +5,7 @@ global user_id_sell
 import discord
 import os
 import time
+import cv2
 #from IMGGEN import Generate as imggen
 from datetime import datetime, timedelta
 import datetime
@@ -73,6 +74,8 @@ import openai
 openai.organization = "org-zuDrmFX8G3H6TsAwxsZZ8PLA"
 openai.api_key = temp['api_key']
 openai.Model.list()
+
+face_cascade_db = cv2.CascadeClassifier(cv2.data.haarcascades+'haarcascade_frontalface_default.xml')
 
 def get_results(query):
     url = 'https://api.duckduckgo.com'
@@ -733,6 +736,42 @@ async def drink(interaction: discord.Interaction, pet: str):
     else:
       await interaction.response.send_message(content='Either you do not have that type of pet or this pet does not exist')
       return
+
+@tree.command(name="face", description="Face recognition")
+async def self(interaction: discord.Interaction,image: discord.Attachment):
+  await interaction.response.defer()
+  attachment = image
+  await attachment.save('face.png')
+  image2 = cv2.imread('face.png')
+  faces = face_cascade_db.detectMultiScale(image2,1.1,19)
+  for(x,y,w,h) in faces:
+    cv2.rectangle(image2,(x,y),(x+w,y+h),(0,255,0),2)
+  cv2.imwrite('face_rec_result.png', image2)
+  await interaction.followup.send(file=discord.File('face_rec_result.png'))
+
+@tree.command(name="recipe", description="Recipe finder **beta dont use")
+async def self(interaction: discord.Interaction,meal:str):
+  app_id = "160652b9"
+  app_key = "2b2e37458836cfe80cf3389f82991655"
+
+  url = f"https://api.edamam.com/search?q={meal}&app_id={app_id}&app_key={app_key}"
+
+  response = requests.get(url)
+
+  if response.status_code == 200:
+      data = response.json()
+
+      first_recipe = data['hits'][0]['recipe']
+      recipe_label = first_recipe['label']
+      recipe_url = first_recipe['url']
+
+      await interaction.response.send_message(f"Recipe found for '{dish_name}': {recipe_label}\n{recipe_url}")
+
+  else:
+      await interaction.response.send_message("An error occurred while requesting the recipe. Please try again later.")
+
+
+
 
 
 

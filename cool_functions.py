@@ -4,8 +4,6 @@ import openai
 import os
 import uuid
 import bcrypt
-from dotenv import load_dotenv
-load_dotenv(dotenv_path='.gitignore/.env')
 db = print()
 #import tensorflow as tf
 #model = tf.keras.applications.MobileNetV2(weights='imagenet', include_top=True)
