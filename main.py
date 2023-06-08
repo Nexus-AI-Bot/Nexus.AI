@@ -28,7 +28,7 @@ import logger
 from PIL import Image, ImageOps
 from email.mime.text import MIMEText
 import typing
-from random import choice as ch
+from random import choice as ch                                                                                                                                                                                                                                    
 from pyowm.utils.config import get_default_config
 import cool_functions as f
 from class_economy import Economy
@@ -47,6 +47,7 @@ from skimage import io
 #import tensorflow as tf
 import requests
 import bcrypt
+from class_friend import Friend
 #from dotenv import load_dotenv
 import os
 import threading
@@ -112,6 +113,7 @@ bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 
 # Create an instance of the Economy class
 economy = Economy(bot)
+friend_obj = Friend()
 
 # Print the balance
 
@@ -253,6 +255,16 @@ class Game(discord.ui.View):
   @discord.ui.button(label='Paper', style=discord.ButtonStyle.grey)
   async def menu3(self, interaction: discord.Interaction, button: discord.ui.Button):
     await interaction.response.send_message(f.rock_scissors_paper('paper'))
+
+#
+
+class Friend_Questionnaire(ui.Modal, title='Some questions about you'):
+  answer = ui.TextInput(label='Your interests, seperated by commas', style=discord.TextStyle.paragraph, required=True)
+  async def on_submit(self, interaction: discord.Interaction):
+      answer = str(self.answer)
+      answer.split(',')
+      friend_obj.add(f"{interaction.user.name}#{interaction.user.discriminator}", answer)
+      await interaction.response.send_message(f'You have been added. Now do /friend to find some friends!', ephemeral=True)
 
 
 #
@@ -751,9 +763,18 @@ async def drink(interaction: discord.Interaction, pet: str):
       await interaction.response.send_message(content='Either you do not have that type of pet or this pet does not exist')
       return
 
-
-
-
+@logger.log
+@tree.command(name='friend', description='Find a friend on discord')
+async def self(interaction: discord.Interaction):
+  find = friend_obj.query_username(f"{interaction.user.name}#{interaction.user.discriminator}")
+  if find == None:
+    await interaction.response.send_modal(Friend_Questionnaire())
+  else:
+    user_likes = friend_obj.query_likes(f"{interaction.user.name}#{interaction.user.discriminator}")
+    same_likes = friend_obj.query_same_likes(user_likes)
+    str(*same_likes)
+    str(*user_likes)
+    await interaction.response.send_message(f"{same_likes} has the same likes as you (Reminder, your likes are {user_likes})")
 
 
 
