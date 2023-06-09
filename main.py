@@ -777,9 +777,9 @@ async def self(interaction: discord.Interaction):
     samelikes2 = ""
     userlikes2 = ""
     for i in same_likes:
-      samelikes2 =+ f"{i},"
-    for i in same_likes:
-      samelikes2 =+ f"{i},"
+      samelikes2 = samelikes2 + f"{i},"
+    for i in user_likes:
+      userlikes2 = userlikes2 + f"{i},"
 
     await interaction.response.send_message(f"{samelikes2} has the same likes as you (Reminder, your likes are {userlikes2})")
 
