@@ -262,19 +262,12 @@ class Friend_Questionnaire(ui.Modal, title='Some questions about you'):
   answer = ui.TextInput(label='Your interests, seperated by commas', style=discord.TextStyle.paragraph, required=True)
   async def on_submit(self, interaction: discord.Interaction):
       answer = str(self.answer)
-      answer.split(',')
-      friend_obj.add(f"{interaction.user.name}#{interaction.user.discriminator}", answer)
-      await interaction.response.send_message(f'You have been added. Now do /friend to find some friends!', ephemeral=True)
-
-
-class Friend_Questionnaire(ui.Modal, title='Some questions about you'):
-  answer = ui.TextInput(label='Your interests, seperated by commas', style=discord.TextStyle.paragraph, required=True)
-  async def on_submit(self, interaction: discord.Interaction):
-      answer = str(self.answer)
-      answer.split(',')
-      friend_obj.add(f"{interaction.user.name}#{interaction.user.discriminator}", answer)
-      await interaction.response.send_message(f'You have been added. Now do /friend to find some friends!', ephemeral=True)
-
+      try:
+        answer.split(' ')
+        friend_obj.add(f"{interaction.user.name}#{interaction.user.discriminator}", answer)
+        await interaction.response.send_message(f'You have been added. Now do /friend to find some friends!', ephemeral=True)
+      except: 
+        await interaction.response.send_message(f'A error happened.', ephemeral=True)
 
 #
 
@@ -781,9 +774,14 @@ async def self(interaction: discord.Interaction):
   else:
     user_likes = friend_obj.query_likes(f"{interaction.user.name}#{interaction.user.discriminator}")
     same_likes = friend_obj.query_same_likes(user_likes)
-    str(*same_likes)
-    str(*user_likes)
-    await interaction.response.send_message(f"{same_likes} has the same likes as you (Reminder, your likes are {user_likes})")
+    samelikes2 = ""
+    userlikes2 = ""
+    for i in same_likes:
+      samelikes2 =+ f"{i},"
+    for i in same_likes:
+      samelikes2 =+ f"{i},"
+
+    await interaction.response.send_message(f"{samelikes2} has the same likes as you (Reminder, your likes are {userlikes2})")
 
 
 
