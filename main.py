@@ -255,6 +255,15 @@ class Game(discord.ui.View):
     await interaction.response.send_message(f.rock_scissors_paper('paper'))
 
 
+class Friend_Questionnaire(ui.Modal, title='Some questions about you'):
+  answer = ui.TextInput(label='Your interests, seperated by commas', style=discord.TextStyle.paragraph, required=True)
+  async def on_submit(self, interaction: discord.Interaction):
+      answer = str(self.answer)
+      answer.split(',')
+      friend_obj.add(f"{interaction.user.name}#{interaction.user.discriminator}", answer)
+      await interaction.response.send_message(f'You have been added. Now do /friend to find some friends!', ephemeral=True)
+
+
 #
 
 class HelpConfigDropdown(discord.ui.Select):
