@@ -51,6 +51,8 @@ import bcrypt
 #from dotenv import load_dotenv
 import os
 import threading
+from forex_python.converter import CurrencyRates
+
 
 print('All libarys were sucsessfully imported.')
 
@@ -777,15 +779,20 @@ async def self(interaction: discord.Interaction,meal:str):
 
   if response.status_code == 200:
       data = response.json()
-
-      first_recipe = data['hits'][0]['recipe']
+      try:
+        first_recipe = data['hits'][0]['recipe']
+      except:
+        await interaction.response.send_message("An error occurred while requesting the recipe. Please try again later.")
       recipe_label = first_recipe['label']
       recipe_url = first_recipe['url']
 
-      await interaction.response.send_message(f"Recipe found for '{dish_name}': {recipe_label}\n{recipe_url}")
+      await interaction.response.send_message(f"Recipe found for '{meal}': {recipe_label}\n{recipe_url}")
 
-  else:
-      await interaction.response.send_message("An error occurred while requesting the recipe. Please try again later.")
+@tree.command(name="currency_convert", description="Convert currency!")
+async def self(interaction: discord.Interaction, number: int, from_currency: str, to_currency: str):
+    c = CurrencyRates()
+    converted_amount = c.convert(from_currency, to_currency, number)
+    await interaction.response.send_message(f'Result: {round(converted_amount,2)} {to_currency}')
 
 
 
