@@ -5,6 +5,7 @@ global user_id_sell
 import discord
 import os
 import time
+import cv2
 #from IMGGEN import Generate as imggen
 from datetime import datetime, timedelta
 import datetime
@@ -51,6 +52,8 @@ from class_friend import Friend
 #from dotenv import load_dotenv
 import os
 import threading
+from forex_python.converter import CurrencyRates
+
 
 print('All libarys were sucsessfully imported.')
 
@@ -75,6 +78,8 @@ import openai
 openai.organization = "org-zuDrmFX8G3H6TsAwxsZZ8PLA"
 openai.api_key = temp['api_key']
 openai.Model.list()
+
+face_cascade_db = cv2.CascadeClassifier(cv2.data.haarcascades+'haarcascade_frontalface_default.xml')
 
 def get_results(query):
     url = 'https://api.duckduckgo.com'
@@ -765,23 +770,10 @@ async def drink(interaction: discord.Interaction, pet: str):
       await interaction.response.send_message(content='Either you do not have that type of pet or this pet does not exist')
       return
 
-@logger.log
-@tree.command(name='friend', description='Find a friend on discord')
-async def self(interaction: discord.Interaction):
-  find = friend_obj.query_username(f"{interaction.user.name}#{interaction.user.discriminator}")
-  if find == None:
-    await interaction.response.send_modal(Friend_Questionnaire())
-  else:
-    user_likes = friend_obj.query_likes(f"{interaction.user.name}#{interaction.user.discriminator}")
-    same_likes = friend_obj.query_same_likes(user_likes)
-    samelikes2 = ""
-    userlikes2 = ""
-    for i in same_likes:
-      samelikes2 = samelikes2 + f"{i},"
-    for i in user_likes:
-      userlikes2 = userlikes2 + f"{i},"
 
-    await interaction.response.send_message(f"{samelikes2} has the same likes as you (Reminder, your likes are {userlikes2})")
+
+  url = f"https://api.edamam.com/search?q={meal}&app_id={app_id}&app_key={app_key}"
+
 
 
 
