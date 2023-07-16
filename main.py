@@ -29,14 +29,13 @@ import logger
 from PIL import Image, ImageOps
 from email.mime.text import MIMEText
 import typing
-from random import choice as ch                                                                                                                                                                                                                                    
+from random import choice as ch
 from pyowm.utils.config import get_default_config
 import cool_functions as f
 from class_economy import Economy
 from discord.ext import commands
 from discord import app_commands
-# from skimage import io
-# import the image
+from skimage import io
 import numpy as np
 import matplotlib.pyplot as plt
 import skimage.data as data
@@ -48,11 +47,11 @@ from skimage import io
 #import tensorflow as tf
 import requests
 import bcrypt
-from class_friend import Friend
 #from dotenv import load_dotenv
 import os
 import threading
 from forex_python.converter import CurrencyRates
+from class_friend import Friend
 
 
 print('All libarys were sucsessfully imported.')
