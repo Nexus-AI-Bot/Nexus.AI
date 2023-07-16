@@ -772,7 +772,44 @@ async def drink(interaction: discord.Interaction, pet: str):
 
 
 
+@tree.command(name="face", description="Face recognition")
+async def self(interaction: discord.Interaction,image: discord.Attachment):
+  await interaction.response.defer()
+  attachment = image
+  await attachment.save('face.png')
+  image2 = cv2.imread('face.png')
+  faces = face_cascade_db.detectMultiScale(image2,1.1,19)
+  for(x,y,w,h) in faces:
+    cv2.rectangle(image2,(x,y),(x+w,y+h),(0,255,0),2)
+  cv2.imwrite('face_rec_result.png', image2)
+  await interaction.followup.send(file=discord.File('face_rec_result.png'))
+
+@tree.command(name="recipe", description="Recipe finder **beta dont use")
+async def self(interaction: discord.Interaction,meal:str):
+  app_id = "160652b9"
+  app_key = "2b2e37458836cfe80cf3389f82991655"
+
   url = f"https://api.edamam.com/search?q={meal}&app_id={app_id}&app_key={app_key}"
+
+  response = requests.get(url)
+
+  if response.status_code == 200:
+      data = response.json()
+      try:
+        first_recipe = data['hits'][0]['recipe']
+      except:
+        await interaction.response.send_message("An error occurred while requesting the recipe. Please try again later.")
+      recipe_label = first_recipe['label']
+      recipe_url = first_recipe['url']
+
+      await interaction.response.send_message(f"Recipe found for '{meal}': {recipe_label}\n{recipe_url}")
+
+@tree.command(name="currency_convert", description="Convert currency!")
+async def self(interaction: discord.Interaction, number: int, from_currency: str, to_currency: str):
+    c = CurrencyRates()
+    converted_amount = c.convert(from_currency, to_currency, number)
+    await interaction.response.send_message(f'Result: {round(converted_amount,2)} {to_currency}')
+
 
 
 
