@@ -29,7 +29,7 @@ import logger
 from PIL import Image, ImageOps
 from email.mime.text import MIMEText
 import typing
-from random import choice as ch
+from random import choice as ch                                                                                                                                                                                                                                    
 from pyowm.utils.config import get_default_config
 import cool_functions as f
 from class_economy import Economy
@@ -48,6 +48,7 @@ from skimage import io
 #import tensorflow as tf
 import requests
 import bcrypt
+from class_friend import Friend
 #from dotenv import load_dotenv
 import os
 import threading
@@ -117,6 +118,7 @@ bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 
 # Create an instance of the Economy class
 economy = Economy(bot)
+friend_obj = Friend()
 
 # Print the balance
 
@@ -259,6 +261,18 @@ class Game(discord.ui.View):
   async def menu3(self, interaction: discord.Interaction, button: discord.ui.Button):
     await interaction.response.send_message(f.rock_scissors_paper('paper'))
 
+#
+
+class Friend_Questionnaire(ui.Modal, title='Some questions about you'):
+  answer = ui.TextInput(label='Your interests, seperated by commas', style=discord.TextStyle.paragraph, required=True)
+  async def on_submit(self, interaction: discord.Interaction):
+      answer = str(self.answer)
+      try:
+        answer.split(' ')
+        friend_obj.add(f"{interaction.user.name}#{interaction.user.discriminator}", answer)
+        await interaction.response.send_message(f'You have been added. Now do /friend to find some friends!', ephemeral=True)
+      except: 
+        await interaction.response.send_message(f'A error happened.', ephemeral=True)
 
 #
 
@@ -756,49 +770,9 @@ async def drink(interaction: discord.Interaction, pet: str):
       await interaction.response.send_message(content='Either you do not have that type of pet or this pet does not exist')
       return
 
-@tree.command(name="face", description="Face recognition")
-async def self(interaction: discord.Interaction,image: discord.Attachment):
-  await interaction.response.defer()
-  attachment = image
-  await attachment.save('face.png')
-  image2 = cv2.imread('face.png')
-  faces = face_cascade_db.detectMultiScale(image2,1.1,19)
-  for(x,y,w,h) in faces:
-    cv2.rectangle(image2,(x,y),(x+w,y+h),(0,255,0),2)
-  cv2.imwrite('face_rec_result.png', image2)
-  await interaction.followup.send(file=discord.File('face_rec_result.png'))
 
-@tree.command(name="recipe", description="Recipe finder **beta dont use")
-async def self(interaction: discord.Interaction,meal:str):
-  app_id = "160652b9"
-  app_key = "2b2e37458836cfe80cf3389f82991655"
 
   url = f"https://api.edamam.com/search?q={meal}&app_id={app_id}&app_key={app_key}"
-
-  response = requests.get(url)
-
-  if response.status_code == 200:
-      data = response.json()
-      try:
-        first_recipe = data['hits'][0]['recipe']
-      except:
-        await interaction.response.send_message("An error occurred while requesting the recipe. Please try again later.")
-      recipe_label = first_recipe['label']
-      recipe_url = first_recipe['url']
-
-      await interaction.response.send_message(f"Recipe found for '{meal}': {recipe_label}\n{recipe_url}")
-
-@tree.command(name="currency_convert", description="Convert currency!")
-async def self(interaction: discord.Interaction, number: int, from_currency: str, to_currency: str):
-    c = CurrencyRates()
-    converted_amount = c.convert(from_currency, to_currency, number)
-    await interaction.response.send_message(f'Result: {round(converted_amount,2)} {to_currency}')
-
-
-
-
-
-
 
 
 
