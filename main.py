@@ -771,6 +771,7 @@ async def drink(interaction: discord.Interaction, pet: str):
 
 
 
+@logger.log
 @tree.command(name="face", description="Face recognition")
 async def self(interaction: discord.Interaction,image: discord.Attachment):
   await interaction.response.defer()
@@ -782,7 +783,9 @@ async def self(interaction: discord.Interaction,image: discord.Attachment):
     cv2.rectangle(image2,(x,y),(x+w,y+h),(0,255,0),2)
   cv2.imwrite('face_rec_result.png', image2)
   await interaction.followup.send(file=discord.File('face_rec_result.png'))
+  os.delete('face_rec_result.png')
 
+@logger.log
 @tree.command(name="recipe", description="Recipe finder **beta dont use")
 async def self(interaction: discord.Interaction,meal:str):
   app_id = "160652b9"
@@ -803,6 +806,7 @@ async def self(interaction: discord.Interaction,meal:str):
 
       await interaction.response.send_message(f"Recipe found for '{meal}': {recipe_label}\n{recipe_url}")
 
+@logger.log
 @tree.command(name="currency_convert", description="Convert currency!")
 async def self(interaction: discord.Interaction, number: int, from_currency: str, to_currency: str):
     c = CurrencyRates()
@@ -810,7 +814,35 @@ async def self(interaction: discord.Interaction, number: int, from_currency: str
     await interaction.response.send_message(f'Result: {round(converted_amount,2)} {to_currency}')
 
 
+class Friend_Questionnaire(ui.Modal, title='Some questions about you'):
+  answer = ui.TextInput(label='Your interests, seperated by commas', style=discord.TextStyle.paragraph, required=True)
+  async def on_submit(self, interaction: discord.Interaction):
+      answer = str(self.answer)
+      try:
+        answer.split(' ')
+        friend_obj.add(f"{interaction.user.name}#{interaction.user.discriminator}", answer)
+        await interaction.response.send_message(f'You have been added. Now do /friend to find some friends!', ephemeral=True)
+      except: 
+        await interaction.response.send_message(f'A error happened.', ephemeral=True)
 
+
+@logger.log
+@tree.command(name='friend', description='Find a friend on discord')
+async def self(interaction: discord.Interaction):
+  find = friend_obj.query_username(f"{interaction.user.name}#{interaction.user.discriminator}")
+  if find == None:
+    await interaction.response.send_modal(Friend_Questionnaire())
+  else:
+    user_likes = friend_obj.query_likes(f"{interaction.user.name}#{interaction.user.discriminator}")
+    same_likes = friend_obj.query_same_likes(user_likes)
+    samelikes2 = ""
+    userlikes2 = ""
+    for i in same_likes:
+      samelikes2 = samelikes2 + f"{i},"
+    for i in user_likes:
+      userlikes2 = userlikes2 + f"{i},"
+
+    await interaction.response.send_message(f"{samelikes2} has the same likes as you (Reminder, your likes are {userlikes2})")
 
 
 bot.run(token)
