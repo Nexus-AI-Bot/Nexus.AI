@@ -216,7 +216,7 @@ class Pay(discord.ui.View):
 
   @discord.ui.button(label='Subscribe', style=discord.ButtonStyle.red)
   async def menu1(self, interaction: discord.Interaction, button: discord.ui.Button):
-    await interaction.response.send_message("https://buy.stripe.com/aEUeYwfhy4zF8Eg7su", ephemeral=True)
+    await interaction.response.send_message("https://nexus-ai.xyz/buy-ai-plan", ephemeral=True)
 
 #
 
