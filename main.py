@@ -216,7 +216,7 @@ class Pay(discord.ui.View):
 
   @discord.ui.button(label='Subscribe', style=discord.ButtonStyle.red)
   async def menu1(self, interaction: discord.Interaction, button: discord.ui.Button):
-    await interaction.response.send_message("https://buy.stripe.com/aEUeYwfhy4zF8Eg7su", ephemeral=True)
+    await interaction.response.send_message("https://nexus-ai.xyz/buy-ai-plan", ephemeral=True)
 
 #
 
@@ -362,7 +362,7 @@ async def self(interaction: discord.Interaction, question: str):
     f = e.split(',')
     if 'aiplan' in f and 'paid' in f:
       if f.index('aiplan') + 1 == f.index('paid'):
-        system_msg = 'You are Chat GPT 4'
+        system_msg = f'You are Nexus.AI, a discord bot with an intent of helping people and integrating apps into discord. Do not mentin yourself an AI, Chatbot. Only refer to yourself as Nexus.AI. The users name is {str(interaction.user.display_name)}'
         user_msg = question 
         response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
@@ -373,7 +373,7 @@ async def self(interaction: discord.Interaction, question: str):
         )
 
         response_from_gpt = response["choices"][0]["message"]["content"]
-        if len(response_from_gpt) < 2000:
+        if len(response_from_gpt) < 3000:
           await interaction.followup.send(response_from_gpt)
         else:
           await interaction.followup.send("The response ChatGPT provided is too long. Try asking for something smaller or contact support by opening a ticket in the official server (https://discord.gg/RwWaA3QxVw).")
