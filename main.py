@@ -214,9 +214,13 @@ class Pay(discord.ui.View):
     super().__init__()
     self.value = None
 
-  @discord.ui.button(label='Subscribe', style=discord.ButtonStyle.red)
+  @discord.ui.button(label='Monthly', style=discord.ButtonStyle.red)
   async def menu1(self, interaction: discord.Interaction, button: discord.ui.Button):
-    await interaction.response.send_message("https://nexus-ai.xyz/buy-ai-plan", ephemeral=True)
+    await interaction.response.send_message(f"https://nexus-ai.xyz/create-checkout-session-monthly/{interaction.user.id}", ephemeral=True)
+  
+  @discord.ui.button(label='Yearly', style=discord.ButtonStyle.red)
+  async def menu1(self, interaction: discord.Interaction, button: discord.ui.Button):
+    await interaction.response.send_message(f"https://nexus-ai.xyz/create-checkout-session-yearly/{interaction.user.id}", ephemeral=True)
 
 #
 
@@ -320,7 +324,7 @@ async def self(interaction: discord.Interaction):
 @logger.log
 @tree.command(name="hi", description="introduction")
 async def self(interaction: discord.Interaction):
-  await interaction.response.send_message(f"Hello {interaction.user}! I'm an artificial intelligence. I'm not perfect yet, so I don't want to write me anything. To find #out what you can write the help command.")
+  await interaction.response.send_message(f"Hello {interaction.user}! I'm an artificial intelligence called Nexus.AI. I'm not perfect yet, so I am always being updated by my wonderful developers! To find #out what I can do, do /help.")
 
 @logger.log
 @tree.command(name="help", description="bot commands list")
@@ -350,19 +354,18 @@ async def self(interaction: discord.Interaction, city: str):
     await interaction.response.send_message(embed=embed, ephemeral=True)
   except:
     await interaction.response.send_message('Incorrect city!', ephemeral=True)
+
 @logger.log
 @tree.command(name="askai", description="Ask AI something!")
 async def self(interaction: discord.Interaction, question: str):
   await interaction.response.defer()
-  user_discrim = interaction.user.discriminator
-  user_username = interaction.user.name
-  user_full_id = f"{user_username}#{user_discrim}"
+  user_full_id = str(interaction.user.id)
   try:
     e = economy.query_pay(user_full_id)
     f = e.split(',')
     if 'aiplan' in f and 'paid' in f:
       if f.index('aiplan') + 1 == f.index('paid'):
-        system_msg = f'You are Nexus.AI, a discord bot with an intent of helping people and integrating apps into discord. Do not mentin yourself an AI, Chatbot. Only refer to yourself as Nexus.AI. The users name is {str(interaction.user.display_name)}'
+        system_msg = f'You are Nexus.AI, a discord bot with an intent of helping people and integrating common apps into discord. Do not mention yourself as an AI  or Chatbot. Only refer to yourself as Nexus.AI. The users name is {str(interaction.user.display_name)}. That is the only infomation you know about the user.'
         user_msg = question 
         response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
@@ -423,9 +426,7 @@ async def self(interaction: discord.Interaction):
 @tree.command(name="imagine", description="ai")
 async def self(interaction: discord.Interaction, prompt: str):
   await interaction.response.defer()
-  user_discrim = interaction.user.discriminator
-  user_username = interaction.user.name
-  user_full_id = f"{user_username}#{user_discrim}"
+  user_full_id = interaction.user.id
   try:
     e = economy.query_pay(user_full_id)
     f = e.split(',')
