@@ -219,7 +219,7 @@ class Pay(discord.ui.View):
     await interaction.response.send_message(f"https://nexus-ai.xyz/create-checkout-session-monthly/{interaction.user.id}", ephemeral=True)
   
   @discord.ui.button(label='Yearly', style=discord.ButtonStyle.red)
-  async def menu1(self, interaction: discord.Interaction, button: discord.ui.Button):
+  async def menu2(self, interaction: discord.Interaction, button: discord.ui.Button):
     await interaction.response.send_message(f"https://nexus-ai.xyz/create-checkout-session-yearly/{interaction.user.id}", ephemeral=True)
 
 #
