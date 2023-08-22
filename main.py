@@ -201,6 +201,7 @@ class Pay(discord.ui.View):
   async def menu2(self, interaction: discord.Interaction, button: discord.ui.Button):
     await interaction.response.send_message(f"[Yearly](https://nexus-ai.xyz/create-checkout-session-yearly/{interaction.user.id})", ephemeral=True)
 
+
 #
 
 class ShopDropdown(discord.ui.Select):
