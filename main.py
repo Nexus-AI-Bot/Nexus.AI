@@ -283,7 +283,7 @@ async def self(interaction: discord.Interaction):
   await interaction.response.send_message(f"Hello {interaction.user}! I'm an artificial intelligence called Nexus.AI. I'm not perfect yet, so I am always being updated by my wonderful developers! To find #out what I can do, do /help.")
 
 @logger.log
-@tree.command(name="help", description="LIst all the availible commands")
+@tree.command(name="help", description="List all the availible commands")
 async def self(interaction: discord.Interaction):
   await interaction.response.send_message("Help!", view=HelpConfigView())
 
@@ -316,8 +316,19 @@ async def self(interaction: discord.Interaction, city: str):
 async def self(interaction: discord.Interaction, question: str):
   await interaction.response.defer()
   user_full_id = str(interaction.user.id)
+  global f
   e = economy.query_pay(user_full_id)
-  f = e.split(',')
+  try:
+    f = e.split(',')
+  except AttributeError:
+    view = Pay()
+    embedpay = discord.Embed(title="You are accessing a paid feature", colour=discord.Colour.random(), description="Consider upgrading to the AI Plan")
+    embedpay.add_field(name="Features of the AI plan:", value=" ", inline=False)
+    embedpay.add_field(name="/askai", value="Generate __**unlimited**__ ChatGPT content!", inline=False)
+    embedpay.add_field(name="/imagine", value="Generate __**unlimited**__ AI art for Dall-E!", inline=False)
+    await interaction.followup.send(embed=embedpay, view=view)
+    economy.add_pay(user_full_id, 'aiplan,notpaid')
+
   if 'aiplan' in f and 'paid' in f:
     if f.index('aiplan') + 1 == f.index('paid'):
       system_msg = f'You are Nexus.AI, a discord bot with an intent of helping people and integrating common apps into discord. Do not mention yourself as an AI  or Chatbot. Only refer to yourself as Nexus.AI. The users name is {str(interaction.user.display_name)}. That is the only infomation you know about the user.'
@@ -331,14 +342,13 @@ async def self(interaction: discord.Interaction, question: str):
       )
 
       response_from_gpt = response["choices"][0]["message"]["content"]
-      if len(response_from_gpt) < 3000:
-        await interaction.followup.send(response_from_gpt)
-      else:
-        await interaction.followup.send("The response ChatGPT provided is too long. Try asking for something smaller or contact support by opening a ticket in the official server (https://discord.gg/RwWaA3QxVw).")
+      await interaction.followup.send(response_from_gpt)
   else:
     view = Pay()
-    embedpay = discord.Embed(title="You are accessing a paid feature", colour=discord.Colour.random())
-    embedpay.add_field(name="Consider upgrading to the AI Plan", value="Click the button below!", inline=False)
+    embedpay = discord.Embed(title="You are accessing a paid feature", colour=discord.Colour.random(), description="Consider upgrading to the AI Plan")
+    embedpay.add_field(name="Features of the AI plan:", value=" ", inline=False)
+    embedpay.add_field(name="/askai", value="Generate __unlimited__ ChatGPT content!", inline=False)
+    embedpay.add_field(name="/imagine", value="Generate unlimited AI art for Dall-E!", inline=False)
     await interaction.followup.send(embed=embedpay, view=view)
     economy.add_pay(user_full_id, 'aiplan,notpaid')
 
@@ -388,8 +398,19 @@ async def self(interaction: discord.Interaction):
 async def self(interaction: discord.Interaction, prompt: str):
   await interaction.response.defer()
   user_full_id = interaction.user.id
+  global f
   e = economy.query_pay(user_full_id)
-  f = e.split(',')
+  try:
+    f = e.split(',')
+  except AttributeError:
+    view = Pay()
+    embedpay = discord.Embed(title="You are accessing a paid feature", colour=discord.Colour.random(), description="Consider upgrading to the AI Plan")
+    embedpay.add_field(name="Features of the AI plan:", value=" ", inline=False)
+    embedpay.add_field(name="/askai", value="Generate __unlimited__ ChatGPT content!", inline=False)
+    embedpay.add_field(name="/imagine", value="Generate unlimited AI art for Dall-E!", inline=False)
+    await interaction.followup.send(embed=embedpay, view=view)
+    economy.add_pay(user_full_id, 'aiplan,notpaid')
+
   if 'aiplan' in f and 'paid' in f:
     if f.index('aiplan') + 1 == f.index('paid'):
       num_image=1
@@ -431,8 +452,10 @@ async def self(interaction: discord.Interaction, prompt: str):
       await os.remove('dalle.png')
   else:
     view = Pay()
-    embedpay = discord.Embed(title="You are accessing a paid feature", colour=discord.Colour.random())
-    embedpay.add_field(name="Consider upgrading to the AI Plan", value="Click the button below!", inline=False)
+    embedpay = discord.Embed(title="You are accessing a paid feature", colour=discord.Colour.random(), description="Consider upgrading to the AI Plan")
+    embedpay.add_field(name="Features of the AI plan:", value=" ", inline=False)
+    embedpay.add_field(name="/askai", value="Generate __unlimited__ ChatGPT content!", inline=False)
+    embedpay.add_field(name="/imagine", value="Generate unlimited AI art for Dall-E!", inline=False)
     await interaction.followup.send(embed=embedpay, view=view)
     economy.add_pay(user_full_id, 'aiplan,notpaid')
 
