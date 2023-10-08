@@ -58,14 +58,19 @@ def password(msg):
   except:
     return 'Error, not a number'
     
-def math(msg):
-    math = msg
-    try:
-        tree = ast.parse(math, mode='eval')
-        solution = ast.literal_eval(tree.body)
-        return solution
-    except Exception:
-        return "You wrote that wrong:("
+def math(num1, num2, op):
+    if op == '+':
+        return num1 + num2
+    elif op == '-':
+        return num1 - num2
+    elif op == 'x':
+        return num1 * num2
+    elif op == '/':
+        if num2 == 0:
+            return "Division by zero is not allowed."
+        return num1 / num2
+    else:
+        return "Invalid operator."
 
 def math_ran():
   random_number = random.randint(1, 4)

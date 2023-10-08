@@ -364,8 +364,8 @@ async def self(interaction: discord.Interaction):
   
 @logger.log
 @tree.command(name="calculate", description="Calculate a math problem")
-async def self(interaction: discord.Interaction, math_problem: str):
-  await interaction.response.send_message(f.math(math_problem))
+async def self(interaction: discord.Interaction, num1: int, num2: int, operator: str):
+  await interaction.response.send_message(f.math(num1, num2, operator))
   
 @logger.log
 @tree.command(name="password", description="Get a random password")
