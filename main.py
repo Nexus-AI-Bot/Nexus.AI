@@ -419,7 +419,7 @@ async def self(interaction: discord.Interaction):
   
 @logger.log
 @tree.command(name="calculate", description="Calculate a math problem")
-async def self(interaction: discord.Interaction, math_problem: str):
+async def self(interaction: discord.Interaction, num1: int, num2: int, operator: str):
   id = interaction.guild.id
   json = {
     'guild_id':id,
@@ -427,7 +427,7 @@ async def self(interaction: discord.Interaction, math_problem: str):
   }
   request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
   if request.text == 'True':
-    await interaction.response.send_message(f.math(math_problem))
+    await interaction.response.send_message(f.math(num1, num2, operator))
   else:
     await interaction.response.send_message('This command has been disabled')
   
@@ -929,7 +929,7 @@ async def drink_autocompletion(interaction: discord.Interaction, current: str) -
 @logger.log
 @tree.command(name="sell", description="Sell your pet")
 @app_commands.autocomplete(pet=drink_autocompletion)
-async def sell(interaction: discord.Interaction, pet: str):
+async def self(interaction: discord.Interaction, pet: str):
   
   id = interaction.guild.id
   json = {
