@@ -54,7 +54,7 @@ from forex_python.converter import CurrencyRates
 from class_friend import Friend
 
 
-print('All libarys were sucsessfully imported.')
+print('All libaries were sucsessfully imported.')
 
 # Load environment variables from .env file
 #load_dotenv(dotenv_path='.gitignore/.env')
@@ -280,195 +280,306 @@ class HelpConfigView(discord.ui.View):
 @logger.log
 @tree.command(name="hi", description="Intruduction to the bot")
 async def self(interaction: discord.Interaction):
-  await interaction.response.send_message(f"Hello {interaction.user}! I'm an artificial intelligence called Nexus.AI. I'm not perfect yet, so I am always being updated by my wonderful developers! To find #out what I can do, do /help.")
-
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  
+  if request.text == 'True':
+    await interaction.response.send_message(f"Hello {interaction.user}! I'm an artificial intelligence called Nexus.AI. I'm not perfect yet, so I am always being updated by my wonderful developers! To find #out what I can do, do /help.")
+  else:
+    await interaction.response.send_message('This command has been disabled.')
+  
 @logger.log
 @tree.command(name="help", description="List all the availible commands")
 async def self(interaction: discord.Interaction):
-  await interaction.response.send_message("Help!", view=HelpConfigView())
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
+    await interaction.response.send_message('Help!', view=HelpConfigView())
+  else:
+    await interaction.response.send_message("This command has been disabled")
 
 @logger.log
 @tree.command(name="weather", description="Check the weather in a given city")
 async def self(interaction: discord.Interaction, city: str):
-  embed = discord.Embed(title="Weather", description=f"This is a weather in {city}", colour=discord.Colour.random())
-  owm = OWM('23232775d430e5fe2ac9a9c2cbdb8410')
-  manager = owm.weather_manager()
-  try:
-    observation = manager.weather_at_place(city) 
-    weather = observation.weather
-    temp = weather.temperature("celsius").get("temp")
-    temp_max = weather.temperature("celsius").get("temp_max")
-    temp_min = weather.temperature("celsius").get("temp_min")
-    feels_like = weather.temperature("celsius").get("feels_like")
-    rain = weather.rain
-    embed.add_field(name="It's outside now:",   value=weather.detailed_status)
-    embed.add_field(name="Cloudy:", value=weather.clouds, inline=True)
-    embed.add_field(name="Current temperature:", value=temp, inline=False)
-    embed.add_field(name="Maximum temperature:", value=temp_max, inline=False)
-    embed.add_field(name="Minimum temperature:", value=temp_min, inline=False)
-    embed.add_field(name="Feels like", value=feels_like, inline=False)
-    await interaction.response.send_message(embed=embed, ephemeral=True)
-  except:
-    await interaction.response.send_message('Incorrect city!', ephemeral=True)
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
+    embed = discord.Embed(title="Weather", description=f"This is a weather in {city}", colour=discord.Colour.random())
+    owm = OWM('23232775d430e5fe2ac9a9c2cbdb8410')
+    manager = owm.weather_manager()
+    try:
+      observation = manager.weather_at_place(city) 
+      weather = observation.weather
+      temp = weather.temperature("celsius").get("temp")
+      temp_max = weather.temperature("celsius").get("temp_max")
+      temp_min = weather.temperature("celsius").get("temp_min")
+      feels_like = weather.temperature("celsius").get("feels_like")
+      rain = weather.rain
+      embed.add_field(name="It's outside now:",   value=weather.detailed_status)
+      embed.add_field(name="Cloudy:", value=weather.clouds, inline=True)
+      embed.add_field(name="Current temperature:", value=temp, inline=False)
+      embed.add_field(name="Maximum temperature:", value=temp_max, inline=False)
+      embed.add_field(name="Minimum temperature:", value=temp_min, inline=False)
+      embed.add_field(name="Feels like", value=feels_like, inline=False)
+      await interaction.response.send_message(embed=embed, ephemeral=True)
+    except:
+      await interaction.response.send_message('Incorrect city!', ephemeral=True)
+    else:
+      await interaction.response.send_message('This command has been disabled')
 
 @logger.log
 @tree.command(name="askai", description="Ask ChatGPT something")
 async def self(interaction: discord.Interaction, question: str):
   await interaction.response.defer()
-  user_full_id = str(interaction.user.id)
-  global f
-  e = economy.query_pay(user_full_id)
-  try:
-    f = e.split(',')
-  except AttributeError:
-    view = Pay()
-    embedpay = discord.Embed(title="You are accessing a paid feature", colour=discord.Colour.random(), description="Consider upgrading to the AI Plan")
-    embedpay.add_field(name="Features of the AI plan:", value=" ", inline=False)
-    embedpay.add_field(name="/askai", value="Generate __**unlimited**__ ChatGPT content!", inline=False)
-    embedpay.add_field(name="/imagine", value="Generate __**unlimited**__ AI art for Dall-E!", inline=False)
-    await interaction.followup.send(embed=embedpay, view=view)
-    economy.add_pay(user_full_id, 'aiplan,notpaid')
+  
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
+    user_full_id = str(interaction.user.id)
+    global f
+    e = economy.query_pay(user_full_id)
+    try:
+      f = e.split(',')
+    except AttributeError:
+      view = Pay()
+      embedpay = discord.Embed(title="You are accessing a paid feature", colour=discord.Colour.random(), description="Consider upgrading to the AI Plan")
+      embedpay.add_field(name="Features of the AI plan:", value=" ", inline=False)
+      embedpay.add_field(name="/askai", value="Generate __**unlimited**__ ChatGPT content!", inline=False)
+      embedpay.add_field(name="/imagine", value="Generate __**unlimited**__ AI art for Dall-E!", inline=False)
+      await interaction.followup.send(embed=embedpay, view=view)
+      economy.add_pay(user_full_id, 'aiplan,notpaid')
 
-  if 'aiplan' in f and 'paid' in f:
-    if f.index('aiplan') + 1 == f.index('paid'):
-      system_msg = f'You are Nexus.AI, a discord bot with an intent of helping people and integrating common apps into discord. Do not mention yourself as an AI  or Chatbot. Only refer to yourself as Nexus.AI. The users name is {str(interaction.user.display_name)}. That is the only infomation you know about the user.'
-      user_msg = question 
-      response = openai.ChatCompletion.create(
-      model="gpt-3.5-turbo",
-      messages=[
-      {"role": "system", "content": system_msg},
-      {"role": "user", "content": user_msg}
-      ]
-      )
+    if 'aiplan' in f and 'paid' in f:
+      if f.index('aiplan') + 1 == f.index('paid'):
+        system_msg = f'You are Nexus.AI, a discord bot with an intent of helping people and integrating common apps into discord. Do not mention yourself as an AI  or Chatbot. Only refer to yourself as Nexus.AI. The users name is {str(interaction.user.display_name)}. That is the only infomation you know about the user.'
+        user_msg = question 
+        response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+        {"role": "system", "content": system_msg},
+        {"role": "user", "content": user_msg}
+        ]
+        )
 
-      response_from_gpt = response["choices"][0]["message"]["content"]
-      await interaction.followup.send(response_from_gpt)
+        response_from_gpt = response["choices"][0]["message"]["content"]
+        await interaction.followup.send(response_from_gpt)
+    else:
+      view = Pay()
+      embedpay = discord.Embed(title="You are accessing a paid feature", colour=discord.Colour.random(), description="Consider upgrading to the AI Plan")
+      embedpay.add_field(name="Features of the AI plan:", value=" ", inline=False)
+      embedpay.add_field(name="/askai", value="Generate __unlimited__ ChatGPT content!", inline=False)
+      embedpay.add_field(name="/imagine", value="Generate unlimited AI art for Dall-E!", inline=False)
+      await interaction.followup.send(embed=embedpay, view=view)
+      economy.add_pay(user_full_id, 'aiplan,notpaid')
   else:
-    view = Pay()
-    embedpay = discord.Embed(title="You are accessing a paid feature", colour=discord.Colour.random(), description="Consider upgrading to the AI Plan")
-    embedpay.add_field(name="Features of the AI plan:", value=" ", inline=False)
-    embedpay.add_field(name="/askai", value="Generate __unlimited__ ChatGPT content!", inline=False)
-    embedpay.add_field(name="/imagine", value="Generate unlimited AI art for Dall-E!", inline=False)
-    await interaction.followup.send(embed=embedpay, view=view)
-    economy.add_pay(user_full_id, 'aiplan,notpaid')
+    await interaction.followup.send('This command has been disabled')
 
 @logger.log
 @tree.command(name="randommath", description="Get a random math question")
 async def self(interaction: discord.Interaction):
-  await interaction.response.send_message(f.math_ran())
-  
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
+    await interaction.response.send_message(f.math_ran())
+  else:
+    await interaction.response.send_message('This command has been disabed')
 @logger.log
 @tree.command(name="funfact", description="Get a random funfact")
 async def self(interaction: discord.Interaction):
-  await interaction.response.send_message(f.funfact())
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
+    await interaction.response.send_message(f.funfact())
+  else:
+    await interaction.response.send_message('This command has been disabled')
   
 @logger.log
 @tree.command(name="calculate", description="Calculate a math problem")
 async def self(interaction: discord.Interaction, math_problem: str):
-  await interaction.response.send_message(f.math(math_problem))
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
+    await interaction.response.send_message(f.math(math_problem))
+  else:
+    await interaction.response.send_message('This command has been disabled')
   
 @logger.log
 @tree.command(name="password", description="Get a random password")
 async def self(interaction: discord.Interaction, symbols_quantity: str):
-  await interaction.response.send_message(f.password(symbols_quantity), ephemeral=True)
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
+    await interaction.response.send_message(f.password(symbols_quantity), ephemeral=True)
+  else:
+    await interaction.response.send_message("This command has been disabled")
 
 @logger.log
 @tree.command(name="email", description="Send an email")
 async def self(interaction: discord.Interaction, subject: str, body: str, recipient: str):
   await interaction.response.defer()
-  recipients = recipient
-  print(recipient)
-  msg = MIMEText(body)
-  msg['Subject'] = subject
-  msg['From'] = sender
-  msg['To'] = recipients
-  smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-  smtp_server.login(sender, password_google)
-  smtp_server.sendmail(sender, recipients, msg.as_string())
-  smtp_server.quit()
-  await interaction.followup.send("Sent!", ephemeral=True)
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
+    recipients = recipient
+    print(recipient)
+    msg = MIMEText(body)
+    msg['Subject'] = subject
+    msg['From'] = sender
+    msg['To'] = recipients
+    smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+    smtp_server.login(sender, password_google)
+    smtp_server.sendmail(sender, recipients, msg.as_string())
+    smtp_server.quit()
+    await interaction.followup.send(f"Sent email with subject {subject} to {recipients}", ephemeral=True)
+  else:
+    await interaction.followup.send('This command has been disabled')
 
 @logger.log
 @tree.command(name="emoji", description="Get a random emoji")
 async def self(interaction: discord.Interaction):
-  await interaction.response.send_message(ch(emoji))
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
+    await interaction.response.send_message(ch(emoji))
+  else:
+    await interaction.response.send_message('This command has been disabled')
 
 @logger.log
 @tree.command(name="imagine", description="Generate an AI image")
 async def self(interaction: discord.Interaction, prompt: str):
   await interaction.response.defer()
-  user_full_id = interaction.user.id
-  global f
-  e = economy.query_pay(user_full_id)
-  try:
-    f = e.split(',')
-  except AttributeError:
-    view = Pay()
-    embedpay = discord.Embed(title="You are accessing a paid feature", colour=discord.Colour.random(), description="Consider upgrading to the AI Plan")
-    embedpay.add_field(name="Features of the AI plan:", value=" ", inline=False)
-    embedpay.add_field(name="/askai", value="Generate __unlimited__ ChatGPT content!", inline=False)
-    embedpay.add_field(name="/imagine", value="Generate unlimited AI art for Dall-E!", inline=False)
-    await interaction.followup.send(embed=embedpay, view=view)
-    economy.add_pay(user_full_id, 'aiplan,notpaid')
+  
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
+    user_full_id = interaction.user.id
+    global f
+    e = economy.query_pay(user_full_id)
+    try:
+      f = e.split(',')
+    except AttributeError:
+      view = Pay()
+      embedpay = discord.Embed(title="You are accessing a paid feature", colour=discord.Colour.random(), description="Consider upgrading to the AI Plan")
+      embedpay.add_field(name="Features of the AI plan:", value=" ", inline=False)
+      embedpay.add_field(name="/askai", value="Generate __unlimited__ ChatGPT content!", inline=False)
+      embedpay.add_field(name="/imagine", value="Generate unlimited AI art for Dall-E!", inline=False)
+      await interaction.followup.send(embed=embedpay, view=view)
+      economy.add_pay(user_full_id, 'aiplan,notpaid')
 
-  if 'aiplan' in f and 'paid' in f:
-    if f.index('aiplan') + 1 == f.index('paid'):
-      num_image=1
-      SIZES = ('1024x1024', '512x512', '256x256')
-      size='512x512'
-      output_format='url'
-      """
-      params: 
-          prompt (str):
-          num_image (int):
-          size (str):
-          output_format (str):
-      """
-      try:
-        images = []
-        response = openai.Image.create(
-          prompt=prompt,
-          n=num_image,
-          size=size,
-          response_format=output_format
-        )
-        print(response)
-        if output_format == 'url':
-          for image in response['data']:
-            images.append(image.url)
-        elif output_format == 'b64_json':
-          for image in response['data']:
-            images.append(image.b64_json)
-      except:
-        print('didnt work lol')
-      openai.api_key = temp['api_key']
-      e = {'images': images}
-      images = e['images']
-      images[0]
-      for image in images:
-          print('Image Generated')
-      urllib.request.urlretrieve(image, "dalle.png")
-      await interaction.followup.send(file=discord.File('dalle.png'))
-      await os.remove('dalle.png')
+    if 'aiplan' in f and 'paid' in f:
+      if f.index('aiplan') + 1 == f.index('paid'):
+        num_image=1
+        SIZES = ('1024x1024', '512x512', '256x256')
+        size='512x512'
+        output_format='url'
+        """
+        params: 
+            prompt (str):
+            num_image (int):
+            size (str):
+            output_format (str):
+        """
+        try:
+          images = []
+          response = openai.Image.create(
+            prompt=prompt,
+            n=num_image,
+            size=size,
+            response_format=output_format
+          )
+          print(response)
+          if output_format == 'url':
+            for image in response['data']:
+              images.append(image.url)
+          elif output_format == 'b64_json':
+            for image in response['data']:
+              images.append(image.b64_json)
+        except:
+          print('didnt work lol')
+        openai.api_key = temp['api_key']
+        e = {'images': images}
+        images = e['images']
+        images[0]
+        for image in images:
+            print('Image Generated')
+        urllib.request.urlretrieve(image, "dalle.png")
+        await interaction.followup.send(file=discord.File('dalle.png'))
+        await os.remove('dalle.png')
+    else:
+      view = Pay()
+      embedpay = discord.Embed(title="You are accessing a paid feature", colour=discord.Colour.random(), description="Consider upgrading to the AI Plan")
+      embedpay.add_field(name="Features of the AI plan:", value=" ", inline=False)
+      embedpay.add_field(name="/askai", value="Generate __unlimited__ ChatGPT content!", inline=False)
+      embedpay.add_field(name="/imagine", value="Generate unlimited AI art for Dall-E!", inline=False)
+      await interaction.followup.send(embed=embedpay, view=view)
+      economy.add_pay(user_full_id, 'aiplan,notpaid')
   else:
-    view = Pay()
-    embedpay = discord.Embed(title="You are accessing a paid feature", colour=discord.Colour.random(), description="Consider upgrading to the AI Plan")
-    embedpay.add_field(name="Features of the AI plan:", value=" ", inline=False)
-    embedpay.add_field(name="/askai", value="Generate __unlimited__ ChatGPT content!", inline=False)
-    embedpay.add_field(name="/imagine", value="Generate unlimited AI art for Dall-E!", inline=False)
-    await interaction.followup.send(embed=embedpay, view=view)
-    economy.add_pay(user_full_id, 'aiplan,notpaid')
+    await interaction.followup.send('This command has been disabled')
 
 @logger.log
 @tree.command(name="greyout", description="Greyout an image")
 async def self(interaction: discord.Interaction,image: discord.Attachment):
   await interaction.response.defer()
-  img = await image.read()
-  img2 = iio.BytesIO(img)
-  image_content = io.imread(img2) 
-  image_grey = color.rgb2gray(image_content)
-  io.imsave('grey.png', image_grey)
-  await interaction.followup.send(file=discord.File('grey.png'))
+  
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
+    img = await image.read()
+    img2 = iio.BytesIO(img)
+    image_content = io.imread(img2) 
+    image_grey = color.rgb2gray(image_content)
+    io.imsave('grey.png', image_grey)
+    await interaction.followup.send(file=discord.File('grey.png'))
+  else:
+    await interaction.followup.send("This command has been disabled")
 
 #@logger.log
 #@tree.command(name="rockpaperscissors", description="Rock, paper, scissors")
@@ -486,26 +597,44 @@ async def self(interaction: discord.Interaction,image: discord.Attachment):
 @tree.command(name="balance", description="Check your balance in the economy system")
 async def self(interaction: discord.Interaction):
   await interaction.response.defer()
-  user_id = str(interaction.user.id)
-  balance = economy.query(user_id)  # get the user's balance from the database
-  pets = economy.check_user_pet(user_id)  # get a list of the user's pets from the database
-  if len(pets) > 0:
-    pet_message = "Your pets are: " + ", ".join(pets)
-  else:
-    pet_message = "You don't have any pets yet."
+  
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
+    user_id = str(interaction.user.id)
+    balance = economy.query(user_id)  # get the user's balance from the database
+    pets = economy.check_user_pet(user_id)  # get a list of the user's pets from the database
+    if len(pets) > 0:
+      pet_message = "Your pets are: " + ", ".join(pets)
+    else:
+      pet_message = "You don't have any pets yet."
 
-  await interaction.followup.send(f"Your balance is {balance} coins. {pet_message}")
+    await interaction.followup.send(f"Your balance is {balance} coins. {pet_message}")
+  else:
+    await interaction.followup.send('This command has been disabled')
 
 @logger.log
 @tree.command(name="gamble", description="Gamble for money in the economy system")
 async def self(interaction: discord.Interaction, amount: int):
     await interaction.response.defer()  # defer the response before processing
-    user_id = str(interaction.user.id)
-    balance = economy.query(user_id)  # get the user's balance from the database
+    
+    id = interaction.guild.id
+    json = {
+      'guild_id':id,
+      'command_name': interaction.command.name
+    }
+    request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+    if request.text == 'True': 
+      user_id = str(interaction.user.id)
+      balance = economy.query(user_id)  # get the user's balance from the database
 
-    if amount > balance:
+      if amount > balance:
         await interaction.followup.send('You do not have enough coins to gamble that much!')
-    else:
+      else:
         outcomes = ['win', 'lose']
         outcome = random.choice(outcomes)
 
@@ -515,27 +644,49 @@ async def self(interaction: discord.Interaction, amount: int):
         else:
             economy.delete(user_id, amount)  # subtract the loss from the user's balance in the database
             await interaction.followup.send(f"You lost {amount} coins!")
+    else:
+      await interaction.followup.send('This command has been disabled')
 
 @logger.log
 @tree.command(name="work", description="Work for money in the economy system")
 async def self(interaction: discord.Interaction):
   await interaction.response.defer()
-  user_id = str(interaction.user.id)
-  earnings = random.randint(1, 10)
-  economy.add(user_id, earnings)
-  await interaction.followup.send(f'You earned {earnings} coins for your hard work!')
+  
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
+    user_id = str(interaction.user.id)
+    earnings = random.randint(1, 10)
+    economy.add(user_id, earnings)
+    await interaction.followup.send(f'You earned {earnings} coins for your hard work!')
+  else:
+    await interaction.followup.send('This command has been disabled')
 
 @logger.log
 @tree.command(name="shop", description="Shop for pets in the economy system")
 async def self(interaction: discord.Interaction):
-  embed = discord.Embed(title='Shop', color=0x00ff00)
-  embed.add_field(name='Cat', value='Cost: 150 nexus')
-  embed.add_field(name='Dog', value='Cost: 100 nexus')
-  embed.add_field(name='Parrot', value='Cost: 80 nexus')
-  embed.add_field(name='Gold Fish', value='Cost: 60 nexus')
-  embed.add_field(name='Rabbit', value='Cost: 50 nexus')
-  embed.add_field(name='Hamster', value='Cost: 20 nexus')
-  await interaction.response.send_message(embed=embed, view=ShopView())
+  
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
+    embed = discord.Embed(title='Shop', color=0x00ff00)
+    embed.add_field(name='Cat', value='Cost: 150 nexus')
+    embed.add_field(name='Dog', value='Cost: 100 nexus')
+    embed.add_field(name='Parrot', value='Cost: 80 nexus')
+    embed.add_field(name='Gold Fish', value='Cost: 60 nexus')
+    embed.add_field(name='Rabbit', value='Cost: 50 nexus')
+    embed.add_field(name='Hamster', value='Cost: 20 nexus')
+    await interaction.response.send_message(embed=embed, view=ShopView())
+  else:
+    await interaction.response.send_message('This command has been disabled')
 
 #@logger.log
 #@tree.command(name="test", description="Tic tac toe game!")
@@ -664,18 +815,45 @@ async def self(interaction: discord.Interaction):
 @logger.log
 @tree.command(name='dm', description='DM someone in this server')
 async def self(interaction: discord.Interaction, user: discord.User, message: str):
-  embed = discord.Embed(title=message, description='Sent using [Nexus.AI](https://nexus-ai.xyz) discord bot')
-  await user.send(embed=embed)
-  await interaction.response.send_message("Sent!", ephemeral=True)
+  
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
+    embed = discord.Embed(title=message, description='Sent using [Nexus.AI](https://nexus-ai.xyz) discord bot')
+    await user.send(embed=embed)
+    await interaction.response.send_message(f"Sent message {message} to user {user.display_name}", ephemeral=True)
+  else:
+    await interaction.response.send_message("This command has been disabled")
 
 @logger.log
 @tree.command(name='meme', description='Get a random meme')
 async def self(interaction: discord.Interaction):
-  await interaction.response.send_message(embed=await pyrandmeme())
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
+    await interaction.response.send_message(embed=await pyrandmeme())
+  else:
+    await interaction.response.send_message("This command has been disabled")
 
 @logger.log
 @tree.command(name="search", description="Google something")
 async def self(interaction: discord.Interaction, query: str):
+  
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
     embed = discord.Embed(title="Your search results", description="First 5 shown", colour=discord.Colour.random())
     results = get_results(query)
     if len(results) == 0:
@@ -685,30 +863,61 @@ async def self(interaction: discord.Interaction, query: str):
       await interaction.response.send_message(embed=embed)
     else:
       await interaction.response.send_message(f"We scraped the internet far and wide but couldn't find anything for {query}. :(")
+  else:
+    await interaction.response.send_message('This command has been disabled')
 
 @logger.log
 @tree.command(name="invite", description="Invite the bot")
 async def self(interaction: discord.Interaction):
-  await interaction.response.send_message("Server invite link: https://discord.gg/RwWaA3QxVw \nBot invite link: https://nexus-ai.xyz")
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
+    await interaction.response.send_message("Server invite link: https://discord.gg/RwWaA3QxVw \nBot invite link: https://nexus-ai.xyz")
+  else:
+    await interaction.response.send_message('This command has been disabled')
 
 @logger.log
 @tree.command(name="convert", description="Convert units")
 async def self(interaction: discord.Interaction, number: int, from_unit: str, to_unit: str):
-  answer = f.convert_SI(number, from_unit, to_unit)
-  if answer == "among":
-    await interaction.response.send_message("Valid conversions are mm, cm, m,")
+  
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
+    answer = f.convert_SI(number, from_unit, to_unit)
+    if answer == "among":
+      await interaction.response.send_message("Valid conversions are mm, cm, m,")
+    else:
+      await interaction.response.send_message(f"Converted {number} from {from_unit} to {to_unit}. Answer is {answer}")
   else:
-    await interaction.response.send_message(f"Converted {number} from {from_unit} to {to_unit}. Answer is {answer}")
+    await interaction.response.send_message('This command has been disabled')
 
 @logger.log
 @tree.command(name='roast', description='Roast someone')
 async def self(interaction: discord.Interaction, member: discord.Member):
-  with open("data/roast.json") as r:
-    roasts = json.load(r)
-  name = member.name
-  random_roast = random.choice(roasts["roasts"])
-  roast = f"{name}, {random_roast['roast']}"
-  await interaction.response.send_message(roast)
+  
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
+    with open("data/roast.json") as r:
+      roasts = json.load(r)
+    name = member.name
+    random_roast = random.choice(roasts["roasts"])
+    roast = f"{name}, {random_roast['roast']}"
+    await interaction.response.send_message(roast)
+  else:
+    await interaction.response.send_message('This command has been disabled')
 
 async def drink_autocompletion(interaction: discord.Interaction, current: str) -> typing.List[app_commands.Choice[str]]:
   data = []
@@ -720,37 +929,47 @@ async def drink_autocompletion(interaction: discord.Interaction, current: str) -
 @logger.log
 @tree.command(name="sell", description="Sell your pet")
 @app_commands.autocomplete(pet=drink_autocompletion)
-async def drink(interaction: discord.Interaction, pet: str):
-  user_id_sell = interaction.user.id
-  user_pets = economy.check_user_pet(user_id_sell)
-  if user_pets.count(pet) == 1:
-    if pet == 'cat':
-      economy.add(user_id_sell, 150)
-      economy.delete_pet(user_id_sell, pet)
-      await interaction.response.send_message(f'Your Cat has been sold', ephemeral=True)
-    elif pet == 'dog':
-      economy.add(user_id_sell, 100)
-      economy.delete_pet(user_id_sell, pet)
-      await interaction.response.send_message(f'Your Dog has been sold', ephemeral=True)
-    elif pet == 'parrot':
-      economy.add(user_id_sell, 80)
-      economy.delete_pet(user_id_sell, pet)
-      await interaction.response.send_message(f'Your Parrot has been sold', ephemeral=True)
-    elif pet == 'gold fish':
-      economy.add(user_id_sell, 60)
-      economy.delete_pet(user_id_sell, pet)
-      await interaction.response.send_message(f'Your Gold Fish has been sold', ephemeral=True)
-    elif pet == 'rabbit':
-      economy.add(user_id_sell, 50)
-      economy.delete_pet(user_id_sell, pet)
-      await interaction.response.send_message(f'Your Rabbit has been sold', ephemeral=True)
-    elif pet == 'hamster':
-      economy.add(user_id_sell, 50)
-      economy.delete_pet(user_id_sell, pet)
-      await interaction.response.send_message(f'Your Hamster has been sold', ephemeral=True)
-    else:
-      await interaction.response.send_message(content='Either you do not have that type of pet or this pet does not exist')
-      return
+async def sell(interaction: discord.Interaction, pet: str):
+  
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
+    user_id_sell = interaction.user.id
+    user_pets = economy.check_user_pet(user_id_sell)
+    if user_pets.count(pet) == 1:
+      if pet == 'cat':
+        economy.add(user_id_sell, 150)
+        economy.delete_pet(user_id_sell, pet)
+        await interaction.response.send_message(f'Your Cat has been sold', ephemeral=True)
+      elif pet == 'dog':
+        economy.add(user_id_sell, 100)
+        economy.delete_pet(user_id_sell, pet)
+        await interaction.response.send_message(f'Your Dog has been sold', ephemeral=True)
+      elif pet == 'parrot':
+        economy.add(user_id_sell, 80)
+        economy.delete_pet(user_id_sell, pet)
+        await interaction.response.send_message(f'Your Parrot has been sold', ephemeral=True)
+      elif pet == 'gold fish':
+        economy.add(user_id_sell, 60)
+        economy.delete_pet(user_id_sell, pet)
+        await interaction.response.send_message(f'Your Gold Fish has been sold', ephemeral=True)
+      elif pet == 'rabbit':
+        economy.add(user_id_sell, 50)
+        economy.delete_pet(user_id_sell, pet)
+        await interaction.response.send_message(f'Your Rabbit has been sold', ephemeral=True)
+      elif pet == 'hamster':
+        economy.add(user_id_sell, 50)
+        economy.delete_pet(user_id_sell, pet)
+        await interaction.response.send_message(f'Your Hamster has been sold', ephemeral=True)
+      else:
+        await interaction.response.send_message(content='Either you do not have that type of pet or this pet does not exist')
+        return
+  else:
+    await interaction.response.send_message('This command has been disabled')
 
 
 
@@ -758,27 +977,45 @@ async def drink(interaction: discord.Interaction, pet: str):
 @tree.command(name="face", description="Face recognition")
 async def self(interaction: discord.Interaction,image: discord.Attachment):
   await interaction.response.defer()
-  attachment = image
-  await attachment.save('face.png')
-  image2 = cv2.imread('face.png')
-  faces = face_cascade_db.detectMultiScale(image2,1.1,19)
-  for(x,y,w,h) in faces:
-    cv2.rectangle(image2,(x,y),(x+w,y+h),(0,255,0),2)
-  cv2.imwrite('face_rec_result.png', image2)
-  await interaction.followup.send(file=discord.File('face_rec_result.png'))
-  os.delete('face_rec_result.png')
+  
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True': 
+    attachment = image
+    await attachment.save('face.png')
+    image2 = cv2.imread('face.png')
+    faces = face_cascade_db.detectMultiScale(image2,1.1,19)
+    for(x,y,w,h) in faces:
+      cv2.rectangle(image2,(x,y),(x+w,y+h),(0,255,0),2)
+    cv2.imwrite('face_rec_result.png', image2)
+    await interaction.followup.send(file=discord.File('face_rec_result.png'))
+    os.remove('face_rec_result.png')
+  else:
+    await interaction.followup.send('This command has been disabled')
 
 @logger.log
 @tree.command(name="recipe", description="Recipe finder")
 async def self(interaction: discord.Interaction,meal:str):
-  app_id = "160652b9"
-  app_key = "2b2e37458836cfe80cf3389f82991655"
+  
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
+    app_id = "160652b9"
+    app_key = "2b2e37458836cfe80cf3389f82991655"
 
-  url = f"https://api.edamam.com/search?q={meal}&app_id={app_id}&app_key={app_key}"
+    url = f"https://api.edamam.com/search?q={meal}&app_id={app_id}&app_key={app_key}"
 
-  response = requests.get(url)
+    response = requests.get(url)
 
-  if response.status_code == 200:
+    if response.status_code == 200:
       data = response.json()
       try:
         first_recipe = data['hits'][0]['recipe']
@@ -788,13 +1025,24 @@ async def self(interaction: discord.Interaction,meal:str):
       recipe_url = first_recipe['url']
 
       await interaction.response.send_message(f"Recipe found for '{meal}': {recipe_label}\n{recipe_url}")
+  else:
+    await interaction.response.send_message("This command has been disabled")
 
 @logger.log
 @tree.command(name="currency_convert", description="Convert currency")
 async def self(interaction: discord.Interaction, number: int, from_currency: str, to_currency: str):
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True':
     c = CurrencyRates()
     converted_amount = c.convert(from_currency, to_currency, number)
     await interaction.response.send_message(f'Result: {round(converted_amount,2)} {to_currency}')
+  else:
+    await interaction.response.send_message('This command has been disabled')
 
 
 class Friend_Questionnaire(ui.Modal, title='Some questions about you'):
@@ -812,20 +1060,29 @@ class Friend_Questionnaire(ui.Modal, title='Some questions about you'):
 @logger.log
 @tree.command(name='friend', description='Find a friend on discord')
 async def self(interaction: discord.Interaction):
-  find = friend_obj.query_username(f"{interaction.user.name}#{interaction.user.discriminator}")
-  if find == None:
-    await interaction.response.send_modal(Friend_Questionnaire())
-  else:
-    user_likes = friend_obj.query_likes(f"{interaction.user.name}#{interaction.user.discriminator}")
-    same_likes = friend_obj.query_same_likes(user_likes)
-    samelikes2 = ""
-    userlikes2 = ""
-    for i in same_likes:
-      samelikes2 = samelikes2 + f"{i},"
-    for i in user_likes:
-      userlikes2 = userlikes2 + f"{i},"
+  id = interaction.guild.id
+  json = {
+    'guild_id':id,
+    'command_name': interaction.command.name
+  }
+  request = requests.post('https://nexus-ai.xyz/bot/command/query', json=json)
+  if request.text == 'True': 
+    find = friend_obj.query_username(f"{interaction.user.name}#{interaction.user.discriminator}")
+    if find == None:
+      await interaction.response.send_modal(Friend_Questionnaire())
+    else:
+      user_likes = friend_obj.query_likes(f"{interaction.user.name}#{interaction.user.discriminator}")
+      same_likes = friend_obj.query_same_likes(user_likes)
+      samelikes2 = ""
+      userlikes2 = ""
+      for i in same_likes:
+        samelikes2 = samelikes2 + f"{i},"
+      for i in user_likes:
+        userlikes2 = userlikes2 + f"{i},"
 
-    await interaction.response.send_message(f"{samelikes2} has the same likes as you (Reminder, your likes are {userlikes2})")
+      await interaction.response.send_message(f"{samelikes2} has the same likes as you (Reminder, your likes are {userlikes2})")
+  else:
+    await interaction.response.send_message("This command has been disabled")
 
 
 bot.run(token)
