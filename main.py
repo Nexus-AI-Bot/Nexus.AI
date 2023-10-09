@@ -308,7 +308,7 @@ async def self(interaction: discord.Interaction):
   if request.text == 'True':
     await interaction.response.send_message(f"Hello {interaction.user}! I'm an artificial intelligence called Nexus.AI. I'm not perfect yet, so I am always being updated by my wonderful developers! To find #out what I can do, do /help.")
   else:
-    await interaction.response.send_message('This command has been disabled.')
+    await interaction.response.send_message('This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)!')
   
 @logger.log
 @tree.command(name="help", description="List all the availible commands")
@@ -322,7 +322,7 @@ async def self(interaction: discord.Interaction):
   if request.text == 'True':
     await interaction.response.send_message('Help!', view=HelpConfigView())
   else:
-    await interaction.response.send_message("This command has been disabled")
+    await interaction.response.send_message("This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)")
 
 @logger.log
 @tree.command(name="weather", description="Check the weather in a given city")
@@ -355,7 +355,7 @@ async def self(interaction: discord.Interaction, city: str):
     except:
       await interaction.response.send_message('Incorrect city!', ephemeral=True)
     else:
-      await interaction.response.send_message('This command has been disabled')
+      await interaction.response.send_message('This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)')
 
 @logger.log
 @tree.command(name="askai", description="Ask ChatGPT something")
@@ -406,7 +406,7 @@ async def self(interaction: discord.Interaction, question: str):
       await interaction.followup.send(embed=embedpay, view=view)
       economy.add_pay(user_full_id, 'aiplan,notpaid')
   else:
-    await interaction.followup.send('This command has been disabled')
+    await interaction.followup.send('This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)')
 
 @logger.log
 @tree.command(name="randommath", description="Get a random math question")
@@ -420,7 +420,7 @@ async def self(interaction: discord.Interaction):
   if request.text == 'True':
     await interaction.response.send_message(f.math_ran())
   else:
-    await interaction.response.send_message('This command has been disabed')
+    await interaction.response.send_message('This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)')
 @logger.log
 @tree.command(name="funfact", description="Get a random funfact")
 async def self(interaction: discord.Interaction):
@@ -433,7 +433,7 @@ async def self(interaction: discord.Interaction):
   if request.text == 'True':
     await interaction.response.send_message(f.funfact())
   else:
-    await interaction.response.send_message('This command has been disabled')
+    await interaction.response.send_message('This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)')
   
 @logger.log
 @tree.command(name="calculate", description="Calculate a math problem")
@@ -447,7 +447,7 @@ async def self(interaction: discord.Interaction, num1: int, num2: int, operator:
   if request.text == 'True':
     await interaction.response.send_message(f.math(num1, num2, operator))
   else:
-    await interaction.response.send_message('This command has been disabled')
+    await interaction.response.send_message('This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)')
   
 @logger.log
 @tree.command(name="password", description="Get a random password")
@@ -461,7 +461,7 @@ async def self(interaction: discord.Interaction, symbols_quantity: str):
   if request.text == 'True':
     await interaction.response.send_message(f.password(symbols_quantity), ephemeral=True)
   else:
-    await interaction.response.send_message("This command has been disabled")
+    await interaction.response.send_message("This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)")
 
 @logger.log
 @tree.command(name="email", description="Send an email")
@@ -486,7 +486,7 @@ async def self(interaction: discord.Interaction, subject: str, body: str, recipi
     smtp_server.quit()
     await interaction.followup.send(f"Sent email with subject {subject} to {recipients}", ephemeral=True)
   else:
-    await interaction.followup.send('This command has been disabled')
+    await interaction.followup.send('This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)')
 
 @logger.log
 @tree.command(name="emoji", description="Get a random emoji")
@@ -500,7 +500,7 @@ async def self(interaction: discord.Interaction):
   if request.text == 'True':
     await interaction.response.send_message(ch(emoji))
   else:
-    await interaction.response.send_message('This command has been disabled')
+    await interaction.response.send_message('This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)')
 
 @logger.log
 @tree.command(name="imagine", description="Generate an AI image")
@@ -576,7 +576,7 @@ async def self(interaction: discord.Interaction, prompt: str):
       await interaction.followup.send(embed=embedpay, view=view)
       economy.add_pay(user_full_id, 'aiplan,notpaid')
   else:
-    await interaction.followup.send('This command has been disabled')
+    await interaction.followup.send('This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)')
 
 @logger.log
 @tree.command(name="greyout", description="Greyout an image")
@@ -597,7 +597,7 @@ async def self(interaction: discord.Interaction,image: discord.Attachment):
     io.imsave('grey.png', image_grey)
     await interaction.followup.send(file=discord.File('grey.png'))
   else:
-    await interaction.followup.send("This command has been disabled")
+    await interaction.followup.send("This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)")
 
 #@logger.log
 #@tree.command(name="rockpaperscissors", description="Rock, paper, scissors")
@@ -633,7 +633,7 @@ async def self(interaction: discord.Interaction):
 
     await interaction.followup.send(f"Your balance is {balance} coins. {pet_message}")
   else:
-    await interaction.followup.send('This command has been disabled')
+    await interaction.followup.send('This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)')
 
 @logger.log
 @tree.command(name="gamble", description="Gamble for money in the economy system")
@@ -663,7 +663,7 @@ async def self(interaction: discord.Interaction, amount: int):
             economy.delete(user_id, amount)  # subtract the loss from the user's balance in the database
             await interaction.followup.send(f"You lost {amount} coins!")
     else:
-      await interaction.followup.send('This command has been disabled')
+      await interaction.followup.send('This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)')
 
 @logger.log
 @tree.command(name="work", description="Work for money in the economy system")
@@ -682,7 +682,7 @@ async def self(interaction: discord.Interaction):
     economy.add(user_id, earnings)
     await interaction.followup.send(f'You earned {earnings} coins for your hard work!')
   else:
-    await interaction.followup.send('This command has been disabled')
+    await interaction.followup.send('This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)')
 
 @logger.log
 @tree.command(name="shop", description="Shop for pets in the economy system")
@@ -704,7 +704,7 @@ async def self(interaction: discord.Interaction):
     embed.add_field(name='Hamster', value='Cost: 20 nexus')
     await interaction.response.send_message(embed=embed, view=ShopView())
   else:
-    await interaction.response.send_message('This command has been disabled')
+    await interaction.response.send_message('This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)')
 
 #@logger.log
 #@tree.command(name="test", description="Tic tac toe game!")
@@ -845,7 +845,7 @@ async def self(interaction: discord.Interaction, user: discord.User, message: st
     await user.send(embed=embed)
     await interaction.response.send_message(f"Sent message {message} to user {user.display_name}", ephemeral=True)
   else:
-    await interaction.response.send_message("This command has been disabled")
+    await interaction.response.send_message("This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)")
 
 @logger.log
 @tree.command(name='meme', description='Get a random meme')
@@ -859,7 +859,7 @@ async def self(interaction: discord.Interaction):
   if request.text == 'True':
     await interaction.response.send_message(embed=await pyrandmeme())
   else:
-    await interaction.response.send_message("This command has been disabled")
+    await interaction.response.send_message("This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)")
 
 @logger.log
 @tree.command(name="search", description="Google something")
@@ -882,7 +882,7 @@ async def self(interaction: discord.Interaction, query: str):
     else:
       await interaction.response.send_message(f"We scraped the internet far and wide but couldn't find anything for {query}. :(")
   else:
-    await interaction.response.send_message('This command has been disabled')
+    await interaction.response.send_message('This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)')
 
 @logger.log
 @tree.command(name="invite", description="Invite the bot")
@@ -896,7 +896,7 @@ async def self(interaction: discord.Interaction):
   if request.text == 'True':
     await interaction.response.send_message("Server invite link: https://discord.gg/RwWaA3QxVw \nBot invite link: https://nexus-ai.xyz")
   else:
-    await interaction.response.send_message('This command has been disabled')
+    await interaction.response.send_message('This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)')
 
 @logger.log
 @tree.command(name="convert", description="Convert units")
@@ -915,7 +915,7 @@ async def self(interaction: discord.Interaction, number: int, from_unit: str, to
     else:
       await interaction.response.send_message(f"Converted {number} from {from_unit} to {to_unit}. Answer is {answer}")
   else:
-    await interaction.response.send_message('This command has been disabled')
+    await interaction.response.send_message('This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)')
 
 @logger.log
 @tree.command(name='roast', description='Roast someone')
@@ -935,7 +935,7 @@ async def self(interaction: discord.Interaction, member: discord.Member):
     roast = f"{name}, {random_roast['roast']}"
     await interaction.response.send_message(roast)
   else:
-    await interaction.response.send_message('This command has been disabled')
+    await interaction.response.send_message('This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)')
 
 async def drink_autocompletion(interaction: discord.Interaction, current: str) -> typing.List[app_commands.Choice[str]]:
   data = []
@@ -987,7 +987,7 @@ async def self(interaction: discord.Interaction, pet: str):
         await interaction.response.send_message(content='Either you do not have that type of pet or this pet does not exist')
         return
   else:
-    await interaction.response.send_message('This command has been disabled')
+    await interaction.response.send_message('This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)')
 
 
 
@@ -1013,7 +1013,7 @@ async def self(interaction: discord.Interaction,image: discord.Attachment):
     await interaction.followup.send(file=discord.File('face_rec_result.png'))
     os.remove('face_rec_result.png')
   else:
-    await interaction.followup.send('This command has been disabled')
+    await interaction.followup.send('This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)')
 
 @logger.log
 @tree.command(name="recipe", description="Recipe finder")
@@ -1044,7 +1044,7 @@ async def self(interaction: discord.Interaction,meal:str):
 
       await interaction.response.send_message(f"Recipe found for '{meal}': {recipe_label}\n{recipe_url}")
   else:
-    await interaction.response.send_message("This command has been disabled")
+    await interaction.response.send_message("This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)")
 
 @logger.log
 @tree.command(name="currency_convert", description="Convert currency")
@@ -1060,7 +1060,7 @@ async def self(interaction: discord.Interaction, number: int, from_currency: str
     converted_amount = c.convert(from_currency, to_currency, number)
     await interaction.response.send_message(f'Result: {round(converted_amount,2)} {to_currency}')
   else:
-    await interaction.response.send_message('This command has been disabled')
+    await interaction.response.send_message('This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)')
 
 
 class Friend_Questionnaire(ui.Modal, title='Some questions about you'):
@@ -1100,7 +1100,7 @@ async def self(interaction: discord.Interaction):
 
       await interaction.response.send_message(f"{samelikes2} has the same likes as you (Reminder, your likes are {userlikes2})")
   else:
-    await interaction.response.send_message("This command has been disabled")
+    await interaction.response.send_message("This command has been disabled on the dashboard, ask a moderator or server owner to enable it by going to the [Nexus.AI Website](https://nexus-ai.xyz)")
 
 
 bot.run(token)
