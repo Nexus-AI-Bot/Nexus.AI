@@ -124,7 +124,7 @@ async def on_guild_join(guild):
   
   for i in commands:
     json = {"guild_id":"1105148665984724994","command_name":str(i),"new_value":False,"signature":"nexusaisignature202020202020213456adminpass123456789"}
-    requests.post('https://nexus-ai.xyz/bot/commands/update', json=json)
+    requests.post('https://nexus-ai.xyz/bot/command/update', json=json)
   
   if guild.system_channel:
     await guild.system_channel.send("Thank you for adding Nexus.AI to this server! Make sure to check out the server dashboard at the [Nexus.AI](https://nexus-ai.xyz) website!")
