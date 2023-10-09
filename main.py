@@ -115,6 +115,24 @@ import requests
 url = "https://discord.com/api/webhooks/1085941872515633182/YPQXCvEcqq18roRZI6UcxoplkY2O5X_7ZXfKyps1AF6LbP5sBBx4gdpS4FYw8ebxr4-T" 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 
+
+@bot.event
+async def on_guild_join(guild):
+  print(f"Joined a new guild: {guild.name}")
+  
+  commands =["hi", "help", "weather", "askai", "randommath", "funfact", "calculate", "password", "email", "emoji", "imagine", "greyout", "balance", "gamble", "work", "shop", "dm", "meme", "search", "invite", "convert", "roast", "sell", "face", "recipe", "currency_convert", "friend"]
+  
+  for i in commands:
+    json = {"guild_id":"1105148665984724994","command_name":str(i),"new_value":False,"signature":"nexusaisignature202020202020213456adminpass123456789"}
+    requests.post('https://nexus-ai.xyz/bot/commands/update', json=json)
+  
+  if guild.system_channel:
+    await guild.system_channel.send("Thank you for adding Nexus.AI to this server! Make sure to check out the server dashboard at the [Nexus.AI](https://nexus-ai.xyz) website!")
+
+
+
+
+
 # Create an instance of the Economy class
 economy = Economy(bot)
 friend_obj = Friend()
