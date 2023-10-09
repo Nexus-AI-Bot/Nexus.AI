@@ -118,7 +118,7 @@ bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 
 @bot.event
 async def on_guild_join(guild):
-  print(f"Joined a new guild: {guild.name}")
+  print(f"Joined a new guild: {guild.name}!")
   
   commands =["hi", "help", "weather", "askai", "randommath", "funfact", "calculate", "password", "email", "emoji", "imagine", "greyout", "balance", "gamble", "work", "shop", "dm", "meme", "search", "invite", "convert", "roast", "sell", "face", "recipe", "currency_convert", "friend"]
   
