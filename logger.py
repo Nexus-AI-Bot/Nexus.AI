@@ -1,10 +1,9 @@
 import datetime
 
-logFileName = 'log.txt'
-now = datetime.datetime.now()
 
 def log(func):
     def wrapper(*args, **qwargs):
+        now = datetime.datetime.now()
         try:
             func(*args, **qwargs)
             entry = 'Command ' + func.__name__ + ' executed at: ' + str(now) + ' with args: ' + str(func.__code__.co_varnames)
