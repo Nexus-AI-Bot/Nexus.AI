@@ -1,12 +1,11 @@
 import datetime
 
-logFileName = 'log.txt'
-now = datetime.datetime.now()
 
 def log(func):
     def wrapper(*args, **qwargs):
         try:
             func(*args, **qwargs)
+            now = datetime.datetime.now()
             entry = 'Command ' + func.__name__ + ' executed at: ' + str(now) + ' with args: ' + str(func.__code__.co_varnames)
         except Exception as error:
             entry = 'Command ' + func.__name__ + ' failed to run at: ' + str(now) + ' with args: ' + str(func.__code__.co_varnames) + '\n---> error: '+ str(error)
