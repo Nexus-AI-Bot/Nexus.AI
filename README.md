@@ -1,4 +1,8 @@
- # Nexus.AI
+# ARCHIVED!
+Thank you to everybodies contributions to this project. We enjoyed creating this bot and learning how to code along the way! - (Sasha)[https://alexanderbagrov.com]
+
+
+# Nexus.AI
 
 This repository contains the development code for a bot that is currently in progress. The idea for this bot originated from a Hackathon. Our ultimate objective is to create a bot similar to YAGPDB.
 
