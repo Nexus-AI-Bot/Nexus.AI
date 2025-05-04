@@ -1,5 +1,5 @@
 # ARCHIVED!
-Thank you to everybodies contributions to this project. We enjoyed creating this bot and learning how to code along the way! - (Sasha)[https://alexanderbagrov.com]
+Thank you to everybodies contributions to this project. We enjoyed creating this bot and learning how to code along the way! - [Sasha](https://alexanderbagrov.com)
 
 
 # Nexus.AI
